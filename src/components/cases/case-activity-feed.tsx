@@ -1,7 +1,6 @@
-// @ts-nocheck
 "use client";
 
-import { useQuery } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { Card, CardContent } from "@/components/ui/card";
@@ -35,7 +34,7 @@ const ACTIVITY_ICONS: Record<string, any> = {
 };
 
 export function CaseActivityFeed({ caseId }: CaseActivityFeedProps) {
-  const activities = useQuery(api.caseActivities.listByCase, { caseId });
+  const activities = useAuthedQuery(api.caseActivities.listByCase, { caseId });
 
   if (!activities) {
     return <div className="space-y-3">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-16 w-full" />)}</div>;

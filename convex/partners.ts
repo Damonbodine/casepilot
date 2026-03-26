@@ -4,12 +4,12 @@ import { requireAuth, requireRole } from "./lib/auth";
 
 export const list = query({
   args: {
-    orgId: v.id("organizations"),
+    orgId: v.optional(v.id("organizations")),
     isActive: v.optional(v.boolean()),
     serviceType: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
+    const user = await requireAuth(ctx);
     let results;
     if (args.isActive !== undefined) {
       results = await ctx.db

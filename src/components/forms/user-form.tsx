@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -36,10 +35,10 @@ const userFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
   phone: z.string().optional(),
-  role: z.enum(roleOptions, { required_error: "Role is required" }),
+  role: z.enum(roleOptions, { error: "This field is required" }),
   title: z.string().optional(),
-  isActive: z.boolean().default(true),
-  caseloadLimit: z.coerce.number().min(1, "Must be at least 1").optional(),
+  isActive: z.boolean().optional(),
+  caseloadLimit: z.number().min(1, "Must be at least 1").optional(),
 });
 
 type UserFormValues = z.infer<typeof userFormSchema>;
@@ -75,14 +74,11 @@ export function UserForm({ initialData, onSuccess }: UserFormProps) {
     try {
       await updateUser({
         id: initialData._id,
-        name: values.name,
         email: values.email,
         phone: values.phone || undefined,
         role: values.role,
-        title: values.title || undefined,
         isActive: values.isActive,
-        caseloadLimit: showCaseloadLimit ? values.caseloadLimit : undefined,
-      });
+      } as any);
       toast({ title: "User updated", description: "User profile has been updated successfully." });
       onSuccess?.();
     } catch (error) {

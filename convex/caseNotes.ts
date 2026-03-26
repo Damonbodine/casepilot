@@ -3,10 +3,17 @@ import { query, mutation } from "./_generated/server";
 import { requireAuth, requireRole } from "./lib/auth";
 
 export const list = query({
-  args: { orgId: v.id("organizations") },
+  args: { orgId: v.optional(v.id("organizations")) },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
-    return await ctx.db.query("caseNotes").order("desc").take(100);
+    const user = await requireAuth(ctx);
+    const effectiveOrgId = args.orgId ?? user.organizationId;
+    const orgCases = await ctx.db
+      .query("cases")
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
+      .collect();
+    const caseIds = new Set(orgCases.map((c) => c._id));
+    const all = await ctx.db.query("caseNotes").order("desc").take(200);
+    return all.filter((n) => caseIds.has(n.caseId));
   },
 });
 
@@ -53,7 +60,10 @@ export const create = mutation({
     caseId: v.id("cases"),
     content: v.string(),
     noteType: v.optional(v.string()),
+    category: v.optional(v.string()),
     isPrivate: v.optional(v.boolean()),
+    isPinned: v.optional(v.boolean()),
+    contactMethod: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await requireRole(ctx, ["Admin", "CaseManager", "CaseWorker"]);
@@ -64,9 +74,10 @@ export const create = mutation({
       caseId: args.caseId,
       authorId: user._id,
       content: args.content,
-      category: (args.noteType as any) || "General",
+      category: (args.category ?? args.noteType ?? "General") as any,
       isPrivate: args.isPrivate ?? false,
-      isPinned: false,
+      isPinned: args.isPinned ?? false,
+      contactMethod: args.contactMethod && args.contactMethod !== "None" ? (args.contactMethod as any) : undefined,
       createdAt: now,
     });
     await ctx.db.insert("caseActivities", {

@@ -1,8 +1,8 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useMutation } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -16,7 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, FileText, Upload, Download } from "lucide-react";
 
-const DOC_TYPES = ["Intake", "Assessment", "CourtOrder", "Medical", "Employment", "Housing", "Identity", "Correspondence", "Other"];
+const DOC_TYPES = ["IntakeForm", "Assessment", "CourtOrder", "MedicalRecord", "IdentificationDoc", "FinancialRecord", "ConsentForm", "ServicePlan", "ProgressReport", "Correspondence", "Other"];
 
 interface DocumentListProps {
   caseId: Id<"cases">;
@@ -24,7 +24,7 @@ interface DocumentListProps {
 }
 
 export function DocumentList({ caseId, clientId }: DocumentListProps) {
-  const documents = useQuery(api.documents.listByCase, { caseId });
+  const documents = useAuthedQuery(api.documents.listByCase, { caseId });
   const generateUploadUrl = useMutation(api.documents.generateUploadUrl);
   const createDocument = useMutation(api.documents.create);
   const [open, setOpen] = useState(false);
@@ -75,7 +75,7 @@ export function DocumentList({ caseId, clientId }: DocumentListProps) {
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Documents ({documents.length})</h2>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
+          <DialogTrigger>
             <Button size="sm"><Plus className="h-4 w-4 mr-1" /> Upload Document</Button>
           </DialogTrigger>
           <DialogContent>
@@ -124,7 +124,7 @@ export function DocumentList({ caseId, clientId }: DocumentListProps) {
                 <TableCell className="text-muted-foreground">{new Date(doc.createdAt).toLocaleDateString()}</TableCell>
                 <TableCell>
                   {doc.url && (
-                    <Button variant="ghost" size="sm" asChild>
+                    <Button variant="ghost" size="sm">
                       <a href={doc.url} target="_blank" rel="noopener noreferrer"><Download className="h-4 w-4" /></a>
                     </Button>
                   )}

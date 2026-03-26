@@ -4,11 +4,11 @@ import { requireAuth, requireRole } from "./lib/auth";
 
 export const list = query({
   args: {
-    orgId: v.id("organizations"),
+    orgId: v.optional(v.id("organizations")),
     serviceId: v.optional(v.id("services")),
   },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
+    const user = await requireAuth(ctx);
     if (args.serviceId) {
       return await ctx.db
         .query("serviceDeliveries")
@@ -16,7 +16,15 @@ export const list = query({
         .order("desc")
         .collect();
     }
-    return await ctx.db.query("serviceDeliveries").order("desc").take(100);
+    // Scope to org cases
+    const effectiveOrgId = args.orgId ?? user.organizationId;
+    const orgCases = await ctx.db
+      .query("cases")
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
+      .collect();
+    const caseIds = new Set(orgCases.map((c) => c._id));
+    const all = await ctx.db.query("serviceDeliveries").order("desc").take(200);
+    return all.filter((d) => caseIds.has(d.caseId));
   },
 });
 
@@ -82,29 +90,35 @@ export const getWeeklyStats = query({
 export const create = mutation({
   args: {
     caseId: v.id("cases"),
+    clientId: v.optional(v.id("clients")),
     serviceId: v.id("services"),
-    deliveredDate: v.string(),
-    units: v.number(),
+    deliveredDate: v.optional(v.string()),
+    deliveryDate: v.optional(v.string()),
+    units: v.optional(v.number()),
+    duration: v.optional(v.number()),
     notes: v.optional(v.string()),
     outcome: v.optional(v.string()),
+    status: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await requireRole(ctx, ["Admin", "CaseManager", "CaseWorker"]);
     const caseDoc = await ctx.db.get(args.caseId);
     if (!caseDoc) throw new Error("The requested record was not found");
-    const deliveredTs = new Date(args.deliveredDate).getTime();
+    const dateStr = args.deliveredDate ?? args.deliveryDate;
+    const deliveredTs = dateStr ? new Date(dateStr).getTime() : Date.now();
     if (deliveredTs > Date.now() + 86400000) {
       throw new Error("Service delivery date cannot be in the future");
     }
     const now = Date.now();
+    const unitValue = args.units ?? args.duration ?? 1;
     const deliveryId = await ctx.db.insert("serviceDeliveries", {
       caseId: args.caseId,
-      clientId: caseDoc.clientId,
+      clientId: args.clientId ?? caseDoc.clientId,
       serviceId: args.serviceId,
       providerId: user._id,
       deliveryDate: deliveredTs,
-      duration: args.units,
-      outcome: (args.outcome as any) || "Completed",
+      duration: unitValue,
+      outcome: (args.outcome ?? args.status ?? "Completed") as any,
       notes: args.notes,
       followUpNeeded: false,
       createdAt: now,
@@ -114,7 +128,7 @@ export const create = mutation({
       caseId: args.caseId,
       userId: user._id,
       type: "ServiceDelivered",
-      description: `Service delivered on ${args.deliveredDate}`,
+      description: `Service delivered on ${dateStr ?? new Date().toISOString().split("T")[0]}`,
       createdAt: now,
     });
     await ctx.db.insert("auditLogs", {

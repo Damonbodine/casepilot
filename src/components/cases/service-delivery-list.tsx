@@ -1,7 +1,6 @@
-// @ts-nocheck
 "use client";
 
-import { useQuery } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -19,7 +18,7 @@ interface ServiceDeliveryListProps {
 }
 
 export function ServiceDeliveryList({ caseId }: ServiceDeliveryListProps) {
-  const deliveries = useQuery(api.serviceDeliveries.listByCase, { caseId });
+  const deliveries = useAuthedQuery(api.serviceDeliveries.listByCase, { caseId });
   const [formOpen, setFormOpen] = useState(false);
 
   if (!deliveries) {
@@ -31,7 +30,7 @@ export function ServiceDeliveryList({ caseId }: ServiceDeliveryListProps) {
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Service Deliveries ({deliveries.length})</h2>
         <Dialog open={formOpen} onOpenChange={setFormOpen}>
-          <DialogTrigger asChild>
+          <DialogTrigger>
             <Button size="sm"><Plus className="h-4 w-4 mr-1" /> Log Service</Button>
           </DialogTrigger>
           <DialogContent className="max-w-lg">

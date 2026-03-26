@@ -14,25 +14,26 @@ const VALID_TRANSITIONS: Record<string, string[]> = {
 
 export const list = query({
   args: {
-    orgId: v.id("organizations"),
+    orgId: v.optional(v.id("organizations")),
     status: v.optional(v.string()),
     priority: v.optional(v.string()),
     assignedWorkerId: v.optional(v.id("users")),
   },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
+    const user = await requireAuth(ctx);
+    const effectiveOrgId = args.orgId ?? user.organizationId;
     let results;
     if (args.status) {
       results = await ctx.db
         .query("cases")
         .withIndex("by_organization_status", (q) =>
-          q.eq("organizationId", args.orgId).eq("status", args.status as any)
+          q.eq("organizationId", effectiveOrgId).eq("status", args.status as any)
         )
         .collect();
     } else {
       results = await ctx.db
         .query("cases")
-        .withIndex("by_organization", (q) => q.eq("organizationId", args.orgId))
+        .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
         .collect();
     }
     if (args.priority) {
@@ -94,27 +95,35 @@ export const listByAssignedWorker = query({
 
 export const listByStatus = query({
   args: {
-    orgId: v.id("organizations"),
-    status: v.string(),
+    orgId: v.optional(v.id("organizations")),
+    status: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
+    const user = await requireAuth(ctx);
+    const effectiveOrgId = args.orgId ?? user.organizationId;
+    if (args.status) {
+      return await ctx.db
+        .query("cases")
+        .withIndex("by_organization_status", (q) =>
+          q.eq("organizationId", effectiveOrgId).eq("status", args.status as any)
+        )
+        .collect();
+    }
     return await ctx.db
       .query("cases")
-      .withIndex("by_organization_status", (q) =>
-        q.eq("organizationId", args.orgId).eq("status", args.status as any)
-      )
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
       .collect();
   },
 });
 
 export const getStats = query({
-  args: { orgId: v.id("organizations") },
+  args: { orgId: v.optional(v.id("organizations")) },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
+    const user = await requireAuth(ctx);
+    const effectiveOrgId = args.orgId ?? user.organizationId;
     const all = await ctx.db
       .query("cases")
-      .withIndex("by_organization", (q) => q.eq("organizationId", args.orgId))
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
       .collect();
     const statusCounts: Record<string, number> = {};
     const priorityCounts: Record<string, number> = {};
@@ -131,12 +140,13 @@ export const getStats = query({
 });
 
 export const getAgingMetrics = query({
-  args: { orgId: v.id("organizations") },
+  args: { orgId: v.optional(v.id("organizations")) },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
+    const user = await requireAuth(ctx);
+    const effectiveOrgId = args.orgId ?? user.organizationId;
     const all = await ctx.db
       .query("cases")
-      .withIndex("by_organization", (q) => q.eq("organizationId", args.orgId))
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
       .collect();
     const now = Date.now();
     const openCases = all.filter((c) => c.status !== "Closed");
@@ -158,21 +168,36 @@ export const getAgingMetrics = query({
 
 export const create = mutation({
   args: {
-    orgId: v.id("organizations"),
+    orgId: v.optional(v.id("organizations")),
     clientId: v.id("clients"),
-    title: v.string(),
+    title: v.optional(v.string()),
     description: v.optional(v.string()),
     priority: v.optional(v.string()),
     assignedWorkerId: v.optional(v.id("users")),
     caseType: v.optional(v.string()),
+    type: v.optional(v.string()),
     dueDate: v.optional(v.string()),
+    riskAtIntake: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await requireRole(ctx, ["Admin", "CaseManager", "CaseWorker", "IntakeSpecialist"]);
-    const workerId = args.assignedWorkerId ?? user._id;
-    const worker = await ctx.db.get(workerId);
+    let workerId = args.assignedWorkerId ?? user._id;
+    let worker = await ctx.db.get(workerId);
+    // If the assigned user isn't a CaseWorker/CaseManager (e.g. Admin or IntakeSpecialist creating via intake),
+    // auto-assign to the first available CaseWorker in the organization.
     if (!worker || (worker.role !== "CaseWorker" && worker.role !== "CaseManager")) {
-      throw new Error("Case must have an assigned worker with CaseWorker or CaseManager role");
+      const orgWorkers = await ctx.db
+        .query("users")
+        .withIndex("by_organization", (q) => q.eq("organizationId", user.organizationId))
+        .collect();
+      const available = orgWorkers.find(
+        (u) => u.isActive && (u.role === "CaseWorker" || u.role === "CaseManager")
+      );
+      if (!available) {
+        throw new Error("No available case workers in the organization to assign this case");
+      }
+      workerId = available._id;
+      worker = available;
     }
     if (worker.caseloadLimit) {
       const workerCases = await ctx.db
@@ -184,21 +209,28 @@ export const create = mutation({
         throw new Error("Worker has reached their maximum caseload limit");
       }
     }
+    const effectiveOrgId = args.orgId ?? user.organizationId;
     const now = Date.now();
-    const count = (await ctx.db.query("cases").collect()).length;
+    const existingCases = await ctx.db
+      .query("cases")
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
+      .collect();
+    const count = existingCases.length;
     const caseNumber = `CP-${String(count + 1).padStart(5, "0")}`;
+    const caseType = (args.type ?? args.caseType ?? "General") as any;
+    const description = args.description ?? args.title ?? "New case";
     const caseId = await ctx.db.insert("cases", {
       caseNumber,
       clientId: args.clientId,
-      type: (args.caseType as any) || "General",
+      type: caseType,
       priority: (args.priority as any) || "Medium",
       status: "Open",
       assignedWorkerId: workerId,
-      description: args.description ?? args.title,
+      description,
       openDate: now,
       targetCloseDate: args.dueDate ? new Date(args.dueDate).getTime() : undefined,
-      organizationId: args.orgId,
-      riskAtIntake: "Medium",
+      organizationId: effectiveOrgId,
+      riskAtIntake: (args.riskAtIntake as any) || "Medium",
       createdAt: now,
       updatedAt: now,
     });
@@ -206,7 +238,7 @@ export const create = mutation({
       caseId,
       userId: user._id,
       type: "Created",
-      description: `Case ${caseNumber} created: ${args.title}`,
+      description: `Case ${caseNumber} created: ${description}`,
       createdAt: now,
     });
     await ctx.db.insert("auditLogs", {
@@ -357,6 +389,26 @@ export const remove = mutation({
     const user = await requireRole(ctx, ["Admin", "CaseManager"]);
     const existing = await ctx.db.get(args.id);
     if (!existing) throw new Error("The requested record was not found");
+
+    // Cascade delete related records
+    const caseNotes = await ctx.db.query("caseNotes").withIndex("by_case", (q) => q.eq("caseId", args.id)).collect();
+    for (const note of caseNotes) await ctx.db.delete(note._id);
+
+    const activities = await ctx.db.query("caseActivities").withIndex("by_case", (q) => q.eq("caseId", args.id)).collect();
+    for (const activity of activities) await ctx.db.delete(activity._id);
+
+    const deliveries = await ctx.db.query("serviceDeliveries").withIndex("by_case", (q) => q.eq("caseId", args.id)).collect();
+    for (const delivery of deliveries) await ctx.db.delete(delivery._id);
+
+    const goals = await ctx.db.query("goals").withIndex("by_case", (q) => q.eq("caseId", args.id)).collect();
+    for (const goal of goals) await ctx.db.delete(goal._id);
+
+    const documents = await ctx.db.query("documents").withIndex("by_case", (q) => q.eq("caseId", args.id)).collect();
+    for (const doc of documents) await ctx.db.delete(doc._id);
+
+    const referrals = await ctx.db.query("referrals").withIndex("by_case", (q) => q.eq("caseId", args.id)).collect();
+    for (const referral of referrals) await ctx.db.delete(referral._id);
+
     await ctx.db.delete(args.id);
     await ctx.db.insert("auditLogs", {
       userId: user._id,

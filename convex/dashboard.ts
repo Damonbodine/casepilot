@@ -3,12 +3,13 @@ import { query } from "./_generated/server";
 import { requireAuth, requireRole } from "./lib/auth";
 
 export const getCaseloadStats = query({
-  args: { workerId: v.id("users") },
+  args: { workerId: v.optional(v.id("users")) },
   handler: async (ctx, args) => {
     const user = await requireAuth(ctx);
+    const effectiveWorkerId = args.workerId ?? user._id;
     const cases = await ctx.db
       .query("cases")
-      .withIndex("by_assignedWorker", (q) => q.eq("assignedWorkerId", args.workerId))
+      .withIndex("by_assignedWorker", (q) => q.eq("assignedWorkerId", effectiveWorkerId))
       .collect();
     const active = cases.filter((c) => c.status !== "Closed");
     const statusCounts: Record<string, number> = {};
@@ -32,16 +33,17 @@ export const getCaseloadStats = query({
 });
 
 export const getManagerStats = query({
-  args: { orgId: v.id("organizations") },
+  args: { orgId: v.optional(v.id("organizations")) },
   handler: async (ctx, args) => {
     const user = await requireRole(ctx, ["Admin", "CaseManager"]);
+    const effectiveOrgId = args.orgId ?? user.organizationId;
     const allCases = await ctx.db
       .query("cases")
-      .withIndex("by_organization", (q) => q.eq("organizationId", args.orgId))
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
       .collect();
     const workers = await ctx.db
       .query("users")
-      .withIndex("by_organization", (q) => q.eq("organizationId", args.orgId))
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
       .collect();
     const activeWorkers = workers.filter((w) => w.isActive && (w.role === "CaseWorker" || w.role === "CaseManager"));
     const casesByWorker: Record<string, number> = {};
@@ -59,7 +61,7 @@ export const getManagerStats = query({
     const activeCases = allCases.filter((c) => c.status !== "Closed");
     const clients = await ctx.db
       .query("clients")
-      .withIndex("by_organization", (q) => q.eq("organizationId", args.orgId))
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
       .collect();
     return {
       totalCases: allCases.length,
@@ -75,14 +77,15 @@ export const getManagerStats = query({
 
 export const getAnalyticsStats = query({
   args: {
-    orgId: v.id("organizations"),
+    orgId: v.optional(v.id("organizations")),
     dateRange: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    await requireRole(ctx, ["Admin", "CaseManager"]);
+    const user = await requireRole(ctx, ["Admin", "CaseManager"]);
+    const effectiveOrgId = args.orgId ?? user.organizationId;
     const allCases = await ctx.db
       .query("cases")
-      .withIndex("by_organization", (q) => q.eq("organizationId", args.orgId))
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
       .collect();
     const now = Date.now();
     const thirtyDaysAgo = now - 30 * 86400000;

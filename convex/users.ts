@@ -1,18 +1,27 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
-import { requireAuth, requireRole } from "./lib/auth";
+import { requireAuth, requireRole, getCurrentUser as getCurrentUserHelper } from "./lib/auth";
+
+export const getCurrentUser = query({
+  args: {},
+  handler: async (ctx) => {
+    return await getCurrentUserHelper(ctx);
+  },
+});
+
 
 export const list = query({
   args: {
-    orgId: v.id("organizations"),
+    orgId: v.optional(v.id("organizations")),
     role: v.optional(v.string()),
     search: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await requireAuth(ctx);
+    const effectiveOrgId = args.orgId ?? user.organizationId;
     let results = await ctx.db
       .query("users")
-      .withIndex("by_organization", (q) => q.eq("organizationId", args.orgId))
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
       .collect();
     if (args.role) {
       results = results.filter((u) => u.role === args.role);

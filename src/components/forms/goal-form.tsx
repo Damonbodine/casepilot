@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -44,9 +43,9 @@ const goalPriorityOptions = ["Low", "Medium", "High"] as const;
 const goalFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
-  category: z.enum(goalCategoryOptions, { required_error: "Category is required" }),
-  priority: z.enum(goalPriorityOptions, { required_error: "Priority is required" }),
-  targetDate: z.date({ required_error: "Target date is required" }).refine((d) => d > new Date(), { message: "Target date must be in the future" }),
+  category: z.enum(goalCategoryOptions, { error: "This field is required" }),
+  priority: z.enum(goalPriorityOptions, { error: "This field is required" }),
+  targetDate: z.date({ error: "This field is required" }).refine((d) => d > new Date(), { message: "Target date must be in the future" }),
   milestones: z.string().optional(),
 });
 
@@ -89,10 +88,10 @@ export function GoalForm({ caseId, clientId, initialData, onSuccess }: GoalFormP
         milestones: values.milestones || undefined,
       };
       if (isEditing && initialData?._id) {
-        await updateGoal({ id: initialData._id, ...payload });
+        await updateGoal({ id: initialData._id, ...payload } as any);
         toast({ title: "Goal updated", description: "Goal has been updated successfully." });
       } else {
-        await createGoal({ caseId, clientId, ...payload });
+        await createGoal({ caseId, clientId, ...payload } as any);
         toast({ title: "Goal created", description: "New goal has been created successfully." });
       }
       onSuccess?.();
@@ -152,7 +151,7 @@ export function GoalForm({ caseId, clientId, initialData, onSuccess }: GoalFormP
             <FormItem className="flex flex-col">
               <FormLabel>Target Date *</FormLabel>
               <Popover>
-                <PopoverTrigger asChild>
+                <PopoverTrigger>
                   <FormControl>
                     <Button variant="outline" className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
                       {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}

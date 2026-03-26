@@ -1,7 +1,6 @@
-// @ts-nocheck
 "use client";
 
-import { useQuery } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,11 +20,11 @@ interface CaseWorkspaceProps {
 }
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-  Intake: "outline", Assessment: "secondary", Active: "default", Monitoring: "secondary", Closed: "outline",
+  Open: "outline", InProgress: "default", PendingReview: "secondary", OnHold: "destructive", Closed: "outline", Reopened: "secondary",
 };
 
 export function CaseWorkspace({ caseId }: CaseWorkspaceProps) {
-  const caseData = useQuery(api.cases.getById, { id: caseId });
+  const caseData = useAuthedQuery(api.cases.getById, { id: caseId });
 
   if (!caseData) {
     return (

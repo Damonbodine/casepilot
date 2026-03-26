@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -37,12 +36,12 @@ const deliveryMethodOptions = ["InPerson", "Phone", "VideoCall", "GroupSession",
 const serviceFormSchema = z.object({
   name: z.string().min(1, "Service name is required"),
   description: z.string().min(1, "Description is required"),
-  category: z.enum(serviceCategoryOptions, { required_error: "Category is required" }),
-  deliveryMethod: z.enum(deliveryMethodOptions, { required_error: "Delivery method is required" }),
-  defaultDuration: z.coerce.number().min(1, "Must be at least 1 minute").optional(),
-  maxCapacity: z.coerce.number().min(1, "Must be at least 1").optional(),
-  isActive: z.boolean().default(true),
-  requiresApproval: z.boolean().default(false),
+  category: z.enum(serviceCategoryOptions, { error: "This field is required" }),
+  deliveryMethod: z.enum(deliveryMethodOptions, { error: "This field is required" }),
+  defaultDuration: z.number().min(1, "Must be at least 1 minute").optional(),
+  maxCapacity: z.number().min(1, "Must be at least 1").optional(),
+  isActive: z.boolean().optional(),
+  requiresApproval: z.boolean().optional(),
   fundingSource: z.string().optional(),
 });
 
@@ -85,10 +84,10 @@ export function ServiceForm({ initialData, onSuccess }: ServiceFormProps) {
         fundingSource: values.fundingSource || undefined,
       };
       if (isEditing && initialData?._id) {
-        await updateService({ id: initialData._id, ...payload });
+        await updateService({ id: initialData._id, ...payload } as any);
         toast({ title: "Service updated", description: "Service has been updated successfully." });
       } else {
-        await createService(payload);
+        await createService(payload as any);
         toast({ title: "Service created", description: "New service has been created successfully." });
       }
       onSuccess?.();

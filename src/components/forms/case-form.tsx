@@ -1,11 +1,11 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useToast } from "@/hooks/use-toast";
@@ -43,14 +43,14 @@ const riskLevelOptions = ["Low", "Medium", "High", "Critical"] as const;
 
 const caseFormSchema = z.object({
   clientId: z.string().min(1, "Client is required"),
-  type: z.enum(caseTypeOptions, { required_error: "Case type is required" }),
-  priority: z.enum(priorityOptions, { required_error: "Priority is required" }),
+  type: z.enum(caseTypeOptions, { error: "This field is required" }),
+  priority: z.enum(priorityOptions, { error: "This field is required" }),
   assignedWorkerId: z.string().min(1, "Assigned worker is required"),
   assignedManagerId: z.string().optional(),
   description: z.string().min(1, "Description is required"),
   targetCloseDate: z.date().optional(),
   intakeAssessment: z.string().optional(),
-  riskAtIntake: z.enum(riskLevelOptions, { required_error: "Risk at intake is required" }),
+  riskAtIntake: z.enum(riskLevelOptions, { error: "This field is required" }),
 });
 
 type CaseFormValues = z.infer<typeof caseFormSchema>;
@@ -68,8 +68,8 @@ export function CaseForm({ initialData, clientId, onSuccess }: CaseFormProps) {
   const updateCase = useMutation(api.cases.update);
   const isEditing = !!initialData?._id;
 
-  const clients = useQuery(api.clients.list, {});
-  const users = useQuery(api.users.list, {});
+  const clients = useAuthedQuery(api.clients.list, {});
+  const users = useAuthedQuery(api.users.list, {});
   const workers = users?.filter((u: any) => u.role === "CaseWorker" && u.isActive) ?? [];
   const managers = users?.filter((u: any) => (u.role === "CaseManager" || u.role === "Admin") && u.isActive) ?? [];
 
@@ -99,10 +99,10 @@ export function CaseForm({ initialData, clientId, onSuccess }: CaseFormProps) {
         intakeAssessment: values.intakeAssessment || undefined,
       };
       if (isEditing && initialData?._id) {
-        await updateCase({ id: initialData._id, ...payload });
+        await updateCase({ id: initialData._id, ...payload } as any);
         toast({ title: "Case updated", description: "Case has been updated successfully." });
       } else {
-        await createCase(payload);
+        await createCase(payload as any);
         toast({ title: "Case created", description: "New case has been created successfully." });
       }
       onSuccess?.();
@@ -201,7 +201,7 @@ export function CaseForm({ initialData, clientId, onSuccess }: CaseFormProps) {
           <FormItem className="flex flex-col">
             <FormLabel>Target Close Date</FormLabel>
             <Popover>
-              <PopoverTrigger asChild>
+              <PopoverTrigger>
                 <FormControl>
                   <Button variant="outline" className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
                     {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}

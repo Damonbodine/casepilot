@@ -1,8 +1,8 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useMutation } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,15 +16,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Plus, Pin, Lock, MessageSquare } from "lucide-react";
 
-const CATEGORIES = ["General", "Clinical", "Legal", "Administrative", "FollowUp", "CrisisIntervention"];
-const CONTACT_METHODS = ["InPerson", "Phone", "Email", "VideoCall", "None"];
+const CATEGORIES = ["General", "Assessment", "Progress", "Incident", "ContactLog", "CourtUpdate", "ServicePlan", "Closure"];
+const CONTACT_METHODS = ["InPerson", "Phone", "Email", "VideoCall", "TextMessage", "Mail", "None"];
 
 interface CaseNotesListProps {
   caseId: Id<"cases">;
 }
 
 export function CaseNotesList({ caseId }: CaseNotesListProps) {
-  const notes = useQuery(api.caseNotes.listByCase, { caseId });
+  const notes = useAuthedQuery(api.caseNotes.listByCase, { caseId });
   const createNote = useMutation(api.caseNotes.create);
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -60,7 +60,7 @@ export function CaseNotesList({ caseId }: CaseNotesListProps) {
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Case Notes ({notes.length})</h2>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
+          <DialogTrigger>
             <Button size="sm"><Plus className="h-4 w-4 mr-1" /> Add Note</Button>
           </DialogTrigger>
           <DialogContent>

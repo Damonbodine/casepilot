@@ -1,7 +1,7 @@
-// @ts-nocheck
 "use client";
 
-import { useQuery, useMutation } from "convex/react";
+import { useMutation } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -11,8 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
 export function NotificationBell() {
-  const unreadCount = useQuery(api.notifications.getUnreadCount);
-  const notifications = useQuery(api.notifications.listForUser);
+  const unreadCount = useAuthedQuery(api.notifications.getUnreadCount, {});
+  const notifications = useAuthedQuery(api.notifications.listForUser, {});
   const markAsRead = useMutation(api.notifications.markAsRead);
   const markAllAsRead = useMutation(api.notifications.markAllAsRead);
 
@@ -21,7 +21,7 @@ export function NotificationBell() {
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger>
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-5 w-5" />
           {count > 0 && (
@@ -62,7 +62,7 @@ export function NotificationBell() {
           )}
         </ScrollArea>
         <div className="p-2 border-t border-border">
-          <Button variant="ghost" size="sm" className="w-full text-xs" asChild>
+          <Button variant="ghost" size="sm" className="w-full text-xs">
             <Link href="/notifications">View all notifications</Link>
           </Button>
         </div>

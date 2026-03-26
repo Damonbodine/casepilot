@@ -4,16 +4,23 @@ import { requireAuth, requireRole } from "./lib/auth";
 
 export const list = query({
   args: {
-    orgId: v.id("organizations"),
+    orgId: v.optional(v.id("organizations")),
     status: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
+    const user = await requireAuth(ctx);
+    const effectiveOrgId = args.orgId ?? user.organizationId;
+    const orgCases = await ctx.db
+      .query("cases")
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
+      .collect();
+    const caseIds = new Set(orgCases.map((c) => c._id));
     const all = await ctx.db.query("goals").order("desc").collect();
+    const scoped = all.filter((g) => caseIds.has(g.caseId));
     if (args.status) {
-      return all.filter((g) => g.status === args.status);
+      return scoped.filter((g) => g.status === args.status);
     }
-    return all;
+    return scoped;
   },
 });
 
@@ -41,10 +48,13 @@ export const listByCase = query({
 export const create = mutation({
   args: {
     caseId: v.id("cases"),
+    clientId: v.optional(v.id("clients")),
     title: v.string(),
     description: v.optional(v.string()),
     category: v.optional(v.string()),
     targetDate: v.optional(v.string()),
+    status: v.optional(v.string()),
+    progressPercent: v.optional(v.number()),
     measurableCriteria: v.optional(v.string()),
     milestones: v.optional(v.string()),
   },
@@ -56,14 +66,14 @@ export const create = mutation({
     const targetTs = args.targetDate ? new Date(args.targetDate).getTime() : now + 90 * 86400000;
     const goalId = await ctx.db.insert("goals", {
       caseId: args.caseId,
-      clientId: caseDoc.clientId,
+      clientId: args.clientId ?? caseDoc.clientId,
       title: args.title,
       description: args.description ?? "",
       category: (args.category as any) || "Other",
-      status: "NotStarted",
+      status: (args.status as any) || "NotStarted",
       priority: "Medium",
       targetDate: targetTs,
-      progressPercent: 0,
+      progressPercent: args.progressPercent ?? 0,
       milestones: args.milestones,
       notes: args.measurableCriteria,
       createdAt: now,

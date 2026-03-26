@@ -1,7 +1,6 @@
-// @ts-nocheck
 "use client";
 
-import { useQuery } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -19,11 +18,11 @@ interface ReferralListProps {
 }
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-  Pending: "outline", Sent: "secondary", Accepted: "default", Rejected: "destructive", Completed: "secondary",
+  Pending: "outline", Accepted: "default", Declined: "destructive", Completed: "secondary", Cancelled: "destructive",
 };
 
 export function ReferralList({ caseId }: ReferralListProps) {
-  const referrals = useQuery(api.referrals.listByCase, { caseId });
+  const referrals = useAuthedQuery(api.referrals.listByCase, { caseId });
   const [formOpen, setFormOpen] = useState(false);
 
   if (!referrals) {
@@ -35,7 +34,7 @@ export function ReferralList({ caseId }: ReferralListProps) {
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Referrals ({referrals.length})</h2>
         <Dialog open={formOpen} onOpenChange={setFormOpen}>
-          <DialogTrigger asChild>
+          <DialogTrigger>
             <Button size="sm"><Plus className="h-4 w-4 mr-1" /> New Referral</Button>
           </DialogTrigger>
           <DialogContent className="max-w-lg">

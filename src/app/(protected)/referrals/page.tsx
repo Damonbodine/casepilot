@@ -1,12 +1,11 @@
-// @ts-nocheck
 "use client";
 
-import { useQuery } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import Link from "next/link";
 
 export default function ReferralsListPage() {
-  const referrals = useQuery(api.referrals.list, {});
+  const referrals = useAuthedQuery(api.referrals.list, {});
   if (!referrals) return <div className="p-6">Loading referrals...</div>;
 
   return (

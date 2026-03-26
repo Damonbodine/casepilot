@@ -1,0 +1,40 @@
+[     358ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     618ms] Error: [CONVEX Q(dashboard:getCaseloadStats)] [Request ID: def4808dc1ed1f5c] Server Error
+ArgumentValidationError: Object is missing the required field `workerId`. Consider wrapping the field validator in `v.optional(...)` if this is expected.
+
+Object: {}
+Validator: v.object({workerId: v.id("users")})
+
+
+  Called by client
+    at OptimisticQueryResults.queryResult (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:2697:19)
+    at BaseConvexClient.localQueryResult (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:4559:44)
+    at Object.localQueryResult (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6534:44)
+    at QueriesObserver.getLocalResults (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6091:31)
+    at useQueriesHelper.useMemo[subscription] (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6294:41)
+    at useSubscription.useEffect.checkForUpdates (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6206:43)
+    at basicStateReducer (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:4797:47)
+    at updateReducerImpl (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:4879:79)
+    at updateReducer (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:4829:16)
+    at Object.useState (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:15492:24)
+    at exports.useState (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0rpq4pf._.js:1754:36)
+    at useSubscription (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6177:205)
+    at useQueriesHelper (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6308:201)
+    at useQueries (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6274:12)
+    at useQuery (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6771:200)
+    at CaseloadDashboard (http://localhost:3000/_next/static/chunks/_0d7wq81._.js:491:191)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_0rpq4pf._.js:2647:64)
+[  194342ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://working-cat-27.clerk.accounts.dev/v1/client/sessions/sess_3BTIbGypSy0WTZ0pYCwqQ2cOCvT/tokens/convex?__clerk_api_version=2025-11-10&_clerk_js_version=6.3.3&__clerk_db_jwt=dvb_3BTIXoqW6QLPXMSndQL1rpFkhqU:0
+[  201482ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://working-cat-27.clerk.accounts.dev/v1/client/sessions/sess_3BTIbGypSy0WTZ0pYCwqQ2cOCvT/tokens/convex?debug=skip_cache&__clerk_api_version=2025-11-10&_clerk_js_version=6.3.3&__clerk_db_jwt=dvb_3BTIXoqW6QLPXMSndQL1rpFkhqU:0
+[  220017ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://working-cat-27.clerk.accounts.dev/v1/client/sessions/sess_3BTIbGypSy0WTZ0pYCwqQ2cOCvT/tokens?__clerk_api_version=2025-11-10&_clerk_js_version=6.3.3&__clerk_db_jwt=dvb_3BTIXoqW6QLPXMSndQL1rpFkhqU:0
+[  231216ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://working-cat-27.clerk.accounts.dev/v1/client/sessions/sess_3BTIbGypSy0WTZ0pYCwqQ2cOCvT/tokens?__clerk_api_version=2025-11-10&_clerk_js_version=6.3.3&__clerk_db_jwt=dvb_3BTIXoqW6QLPXMSndQL1rpFkhqU:0

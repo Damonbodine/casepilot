@@ -1,7 +1,6 @@
-// @ts-nocheck
 "use client";
 
-import { useQuery } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,9 +21,9 @@ const RISK_VARIANT: Record<string, "default" | "secondary" | "destructive" | "ou
 };
 
 export function ClientProfile({ clientId }: ClientProfileProps) {
-  const client = useQuery(api.clients.getById, { id: clientId });
-  const cases = useQuery(api.cases.list);
-  const documents = useQuery(api.documents.listByClient, { clientId });
+  const client = useAuthedQuery(api.clients.getById, { id: clientId });
+  const cases = useAuthedQuery(api.cases.list, {});
+  const documents = useAuthedQuery(api.documents.listByClient, { clientId });
 
   if (!client) {
     return (

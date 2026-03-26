@@ -1,8 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -14,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Search, X } from "lucide-react";
 import Link from "next/link";
 
-const STATUSES = ["Active", "Inactive", "Waitlist", "Discharged"];
+const STATUSES = ["Active", "Inactive", "Waitlisted", "Discharged", "Referred"];
 const RISK_LEVELS = ["Low", "Medium", "High", "Critical"];
 
 const RISK_VARIANT: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
@@ -30,7 +29,7 @@ export function ClientDataTable({ organizationId }: ClientDataTableProps) {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [riskFilter, setRiskFilter] = useState<string>("all");
 
-  const clients = useQuery(api.clients.list);
+  const clients = useAuthedQuery(api.clients.list, {});
 
   if (!clients) {
     return (

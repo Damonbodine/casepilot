@@ -4,24 +4,25 @@ import { requireAuth, requireRole } from "./lib/auth";
 
 export const list = query({
   args: {
-    orgId: v.id("organizations"),
+    orgId: v.optional(v.id("organizations")),
     status: v.optional(v.string()),
     riskLevel: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
+    const user = await requireAuth(ctx);
+    const effectiveOrgId = args.orgId ?? user.organizationId;
     let results;
     if (args.status) {
       results = await ctx.db
         .query("clients")
         .withIndex("by_organization_status", (q) =>
-          q.eq("organizationId", args.orgId).eq("status", args.status as any)
+          q.eq("organizationId", effectiveOrgId).eq("status", args.status as any)
         )
         .collect();
     } else {
       results = await ctx.db
         .query("clients")
-        .withIndex("by_organization", (q) => q.eq("organizationId", args.orgId))
+        .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
         .collect();
     }
     if (args.riskLevel) {
@@ -84,41 +85,58 @@ export const listByOrganization = query({
 
 export const create = mutation({
   args: {
-    orgId: v.id("organizations"),
+    orgId: v.optional(v.id("organizations")),
     firstName: v.string(),
     lastName: v.string(),
     dateOfBirth: v.optional(v.string()),
     email: v.optional(v.string()),
     phone: v.optional(v.string()),
+    alternatePhone: v.optional(v.string()),
     address: v.optional(v.string()),
+    city: v.optional(v.string()),
+    state: v.optional(v.string()),
+    zipCode: v.optional(v.string()),
     gender: v.optional(v.string()),
+    race: v.optional(v.string()),
     ethnicity: v.optional(v.string()),
+    preferredLanguage: v.optional(v.string()),
     primaryLanguage: v.optional(v.string()),
     riskLevel: v.optional(v.string()),
+    primaryNeed: v.optional(v.string()),
+    emergencyContactName: v.optional(v.string()),
+    emergencyContactPhone: v.optional(v.string()),
+    emergencyContactRelation: v.optional(v.string()),
     needsAssessment: v.optional(v.string()),
     intakeNotes: v.optional(v.string()),
+    notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await requireRole(ctx, ["Admin", "CaseManager", "CaseWorker", "IntakeSpecialist"]);
+    const effectiveOrgId = args.orgId ?? user.organizationId;
     const now = Date.now();
     const clientId = await ctx.db.insert("clients", {
       firstName: args.firstName,
       lastName: args.lastName,
       dateOfBirth: args.dateOfBirth ? new Date(args.dateOfBirth).getTime() : now,
       gender: (args.gender as any) || "PreferNotToSay",
-      preferredLanguage: (args.primaryLanguage as any) || "English",
+      race: args.race ? (args.race as any) : undefined,
+      preferredLanguage: (args.preferredLanguage ?? args.primaryLanguage ?? "English") as any,
       email: args.email,
       phone: args.phone,
+      alternatePhone: args.alternatePhone,
       address: args.address,
-      emergencyContactName: "Not provided",
-      emergencyContactPhone: "Not provided",
-      emergencyContactRelation: "Not provided",
+      city: args.city,
+      state: args.state,
+      zipCode: args.zipCode,
+      emergencyContactName: args.emergencyContactName ?? "Not provided",
+      emergencyContactPhone: args.emergencyContactPhone ?? "Not provided",
+      emergencyContactRelation: args.emergencyContactRelation ?? "Not provided",
       status: "Active",
       riskLevel: (args.riskLevel as any) || "Low",
-      primaryNeed: "Other",
+      primaryNeed: (args.primaryNeed as any) || "Other",
       intakeDate: now,
-      notes: args.intakeNotes ?? args.needsAssessment,
-      organizationId: args.orgId,
+      notes: args.notes ?? args.intakeNotes ?? args.needsAssessment,
+      organizationId: effectiveOrgId,
       createdAt: now,
       updatedAt: now,
     });

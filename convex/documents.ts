@@ -4,16 +4,23 @@ import { requireAuth, requireRole } from "./lib/auth";
 
 export const list = query({
   args: {
-    orgId: v.id("organizations"),
+    orgId: v.optional(v.id("organizations")),
     documentType: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
-    const all = await ctx.db.query("documents").order("desc").take(100);
+    const user = await requireAuth(ctx);
+    const effectiveOrgId = args.orgId ?? user.organizationId;
+    const orgClients = await ctx.db
+      .query("clients")
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
+      .collect();
+    const clientIds = new Set(orgClients.map((c) => c._id));
+    const all = await ctx.db.query("documents").order("desc").take(200);
+    const scoped = all.filter((d) => clientIds.has(d.clientId));
     if (args.documentType) {
-      return all.filter((d) => d.type === args.documentType);
+      return scoped.filter((d) => d.type === args.documentType);
     }
-    return all;
+    return scoped;
   },
 });
 
@@ -65,9 +72,11 @@ export const create = mutation({
     clientId: v.id("clients"),
     name: v.string(),
     storageId: v.string(),
-    fileType: v.string(),
-    fileSize: v.number(),
+    fileType: v.optional(v.string()),
+    mimeType: v.optional(v.string()),
+    fileSize: v.optional(v.number()),
     documentType: v.optional(v.string()),
+    type: v.optional(v.string()),
     description: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -77,12 +86,12 @@ export const create = mutation({
       caseId: args.caseId,
       clientId: args.clientId,
       name: args.name,
-      type: (args.documentType as any) || "Other",
+      type: (args.type ?? args.documentType ?? "Other") as any,
       description: args.description,
       storageId: args.storageId,
       fileUrl: args.storageId,
       fileSize: args.fileSize,
-      mimeType: args.fileType,
+      mimeType: args.mimeType ?? args.fileType,
       uploadedById: user._id,
       createdAt: now,
       updatedAt: now,

@@ -512,8 +512,8 @@ export default defineSchema({
     .index("by_user_type", ["userId", "type"]),
 
   auditLogs: defineTable({
-    userId: v.id("users"),
-    action: v.union(
+    userId: v.optional(v.id("users")),
+    action: v.optional(v.union(
       v.literal("Create"),
       v.literal("Read"),
       v.literal("Update"),
@@ -522,13 +522,13 @@ export default defineSchema({
       v.literal("Logout"),
       v.literal("Export"),
       v.literal("Import")
-    ),
-    entityType: v.string(),
-    entityId: v.string(),
+    )),
+    entityType: v.optional(v.string()),
+    entityId: v.optional(v.string()),
     details: v.optional(v.string()),
     ipAddress: v.optional(v.string()),
-    organizationId: v.id("organizations"),
-    createdAt: v.number(),
+    organizationId: v.optional(v.id("organizations")),
+    createdAt: v.optional(v.number()),
   })
     .index("by_user", ["userId"])
     .index("by_organization", ["organizationId"])

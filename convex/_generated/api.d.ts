@@ -21,6 +21,7 @@ import type * as lib_auth from "../lib/auth.js";
 import type * as notifications from "../notifications.js";
 import type * as organizations from "../organizations.js";
 import type * as partners from "../partners.js";
+import type * as qaSetup from "../qaSetup.js";
 import type * as referrals from "../referrals.js";
 import type * as seed from "../seed.js";
 import type * as serviceDeliveries from "../serviceDeliveries.js";
@@ -47,6 +48,7 @@ declare const fullApi: ApiFromModules<{
   notifications: typeof notifications;
   organizations: typeof organizations;
   partners: typeof partners;
+  qaSetup: typeof qaSetup;
   referrals: typeof referrals;
   seed: typeof seed;
   serviceDeliveries: typeof serviceDeliveries;

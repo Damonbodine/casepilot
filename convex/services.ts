@@ -4,24 +4,25 @@ import { requireAuth, requireRole } from "./lib/auth";
 
 export const list = query({
   args: {
-    orgId: v.id("organizations"),
+    orgId: v.optional(v.id("organizations")),
     category: v.optional(v.string()),
     isActive: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
+    const user = await requireAuth(ctx);
+    const effectiveOrgId = args.orgId ?? user.organizationId;
     let results;
     if (args.isActive !== undefined) {
       results = await ctx.db
         .query("services")
         .withIndex("by_organization_isActive", (q) =>
-          q.eq("organizationId", args.orgId).eq("isActive", args.isActive!)
+          q.eq("organizationId", effectiveOrgId).eq("isActive", args.isActive!)
         )
         .collect();
     } else {
       results = await ctx.db
         .query("services")
-        .withIndex("by_organization", (q) => q.eq("organizationId", args.orgId))
+        .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
         .collect();
     }
     if (args.category) {

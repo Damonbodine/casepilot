@@ -1,7 +1,6 @@
-// @ts-nocheck
 "use client";
 
-import { useQuery } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -29,19 +28,21 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const NAV_ITEMS = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, roles: ["Admin", "CaseManager", "CaseWorker", "IntakeSpecialist", "ReadOnlyViewer"] },
+  { label: "Dashboard", href: "/dashboard/caseload", icon: LayoutDashboard, roles: ["Admin", "CaseManager", "CaseWorker", "IntakeSpecialist", "ReadOnlyViewer"] },
+  { label: "Manager View", href: "/dashboard/manager", icon: LayoutDashboard, roles: ["Admin", "CaseManager"] },
+  { label: "Analytics", href: "/dashboard/analytics", icon: LayoutDashboard, roles: ["Admin", "CaseManager"] },
   { label: "Clients", href: "/clients", icon: Users, roles: ["Admin", "CaseManager", "CaseWorker", "IntakeSpecialist", "ReadOnlyViewer"] },
+  { label: "New Intake", href: "/clients/new", icon: FileText, roles: ["Admin", "IntakeSpecialist", "CaseManager", "CaseWorker"] },
   { label: "Cases", href: "/cases", icon: FolderKanban, roles: ["Admin", "CaseManager", "CaseWorker", "IntakeSpecialist", "ReadOnlyViewer"] },
-  { label: "Intake", href: "/intake", icon: FileText, roles: ["Admin", "IntakeSpecialist"] },
-  { label: "Services", href: "/services", icon: Briefcase, roles: ["Admin", "CaseManager"] },
-  { label: "Partners", href: "/partners", icon: Handshake, roles: ["Admin"] },
-  { label: "Organizations", href: "/organizations", icon: Building2, roles: ["Admin"] },
+  { label: "Pipeline", href: "/cases/pipeline", icon: FolderKanban, roles: ["Admin", "CaseManager", "CaseWorker"] },
+  { label: "Referrals", href: "/referrals", icon: Handshake, roles: ["Admin", "CaseManager", "CaseWorker"] },
   { label: "Notifications", href: "/notifications", icon: Bell, roles: ["Admin", "CaseManager", "CaseWorker", "IntakeSpecialist", "ReadOnlyViewer"] },
+  { label: "Users", href: "/users", icon: Users, roles: ["Admin"] },
   { label: "Settings", href: "/settings", icon: Settings, roles: ["Admin"] },
 ];
 
 export function AppSidebar() {
-  const currentUser = useQuery(api.users.getCurrentUser);
+  const currentUser = useAuthedQuery(api.users.getCurrentUser);
   const pathname = usePathname();
 
   if (!currentUser) {
@@ -77,11 +78,12 @@ export function AppSidebar() {
         <SidebarMenu>
           {visibleItems.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton asChild isActive={pathname === item.href || pathname.startsWith(item.href + "/")}>
-                <Link href={item.href} className="flex items-center gap-3">
-                  <item.icon className="h-4 w-4" />
-                  <span>{item.label}</span>
-                </Link>
+              <SidebarMenuButton
+                isActive={pathname === item.href || pathname.startsWith(item.href + "/")}
+                render={<Link href={item.href} className="flex items-center gap-3" />}
+              >
+                <item.icon className="h-4 w-4" />
+                <span>{item.label}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}

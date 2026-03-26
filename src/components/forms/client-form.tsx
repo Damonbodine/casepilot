@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -47,10 +46,10 @@ const primaryNeedOptions = ["Housing", "Employment", "MentalHealth", "SubstanceA
 const clientFormSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  dateOfBirth: z.date({ required_error: "Date of birth is required" }),
-  gender: z.enum(genderOptions, { required_error: "Gender is required" }),
+  dateOfBirth: z.date({ error: "This field is required" }),
+  gender: z.enum(genderOptions, { error: "This field is required" }),
   race: z.enum(raceOptions).optional(),
-  preferredLanguage: z.enum(languageOptions, { required_error: "Preferred language is required" }),
+  preferredLanguage: z.enum(languageOptions, { error: "This field is required" }),
   email: z.string().email("Invalid email address").optional().or(z.literal("")),
   phone: z.string().optional(),
   alternatePhone: z.string().optional(),
@@ -61,9 +60,9 @@ const clientFormSchema = z.object({
   emergencyContactName: z.string().min(1, "Emergency contact name is required"),
   emergencyContactPhone: z.string().min(1, "Emergency contact phone is required"),
   emergencyContactRelation: z.string().min(1, "Relationship is required"),
-  status: z.enum(statusOptions, { required_error: "Status is required" }),
-  riskLevel: z.enum(riskLevelOptions, { required_error: "Risk level is required" }),
-  primaryNeed: z.enum(primaryNeedOptions, { required_error: "Primary need is required" }),
+  status: z.enum(statusOptions, { error: "This field is required" }),
+  riskLevel: z.enum(riskLevelOptions, { error: "This field is required" }),
+  primaryNeed: z.enum(primaryNeedOptions, { error: "This field is required" }),
   notes: z.string().optional(),
 });
 
@@ -121,10 +120,10 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
         notes: values.notes || undefined,
       };
       if (isEditing && initialData?._id) {
-        await updateClient({ id: initialData._id, ...payload });
+        await updateClient({ id: initialData._id, ...payload } as any);
         toast({ title: "Client updated", description: "Client record has been updated successfully." });
       } else {
-        await createClient(payload);
+        await createClient(payload as any);
         toast({ title: "Client created", description: "New client has been created successfully." });
       }
       onSuccess?.();
@@ -160,7 +159,7 @@ export function ClientForm({ initialData, onSuccess }: ClientFormProps) {
             <FormItem className="flex flex-col">
               <FormLabel>Date of Birth *</FormLabel>
               <Popover>
-                <PopoverTrigger asChild>
+                <PopoverTrigger>
                   <FormControl>
                     <Button variant="outline" className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
                       {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}

@@ -1,11 +1,11 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useToast } from "@/hooks/use-toast";
@@ -34,10 +34,10 @@ const urgencyOptions = ["Routine", "Urgent", "Emergency"] as const;
 
 const referralFormSchema = z.object({
   partnerId: z.string().min(1, "Partner is required"),
-  direction: z.enum(directionOptions, { required_error: "Direction is required" }),
+  direction: z.enum(directionOptions, { error: "This field is required" }),
   reason: z.string().min(1, "Reason is required"),
   serviceNeeded: z.string().min(1, "Service needed is required"),
-  urgency: z.enum(urgencyOptions, { required_error: "Urgency is required" }),
+  urgency: z.enum(urgencyOptions, { error: "This field is required" }),
   contactName: z.string().optional(),
   contactPhone: z.string().optional(),
   notes: z.string().optional(),
@@ -55,7 +55,7 @@ export function ReferralForm({ caseId, clientId, onSuccess }: ReferralFormProps)
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const createReferral = useMutation(api.referrals.create);
-  const partners = useQuery(api.partners.list, {});
+  const partners = useAuthedQuery(api.partners.list, {});
 
   const form = useForm<ReferralFormValues>({
     resolver: zodResolver(referralFormSchema),
@@ -78,14 +78,10 @@ export function ReferralForm({ caseId, clientId, onSuccess }: ReferralFormProps)
         caseId,
         clientId,
         partnerId: values.partnerId as Id<"partners">,
-        direction: values.direction,
         reason: values.reason,
-        serviceNeeded: values.serviceNeeded,
         urgency: values.urgency,
-        contactName: values.contactName || undefined,
-        contactPhone: values.contactPhone || undefined,
         notes: values.notes || undefined,
-      });
+      } as any);
       toast({ title: "Referral created", description: "Referral has been created successfully." });
       form.reset();
       onSuccess?.();

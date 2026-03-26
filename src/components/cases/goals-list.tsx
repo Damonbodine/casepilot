@@ -1,7 +1,6 @@
-// @ts-nocheck
 "use client";
 
-import { useQuery } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,7 +22,7 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive" | "
 };
 
 export function GoalsList({ caseId }: GoalsListProps) {
-  const goals = useQuery(api.goals.listByCase, { caseId });
+  const goals = useAuthedQuery(api.goals.listByCase, { caseId });
   const [formOpen, setFormOpen] = useState(false);
 
   if (!goals) {
@@ -35,7 +34,7 @@ export function GoalsList({ caseId }: GoalsListProps) {
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Goals ({goals.length})</h2>
         <Dialog open={formOpen} onOpenChange={setFormOpen}>
-          <DialogTrigger asChild>
+          <DialogTrigger>
             <Button size="sm"><Plus className="h-4 w-4 mr-1" /> Add Goal</Button>
           </DialogTrigger>
           <DialogContent className="max-w-lg">

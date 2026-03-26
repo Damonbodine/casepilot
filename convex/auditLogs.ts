@@ -66,6 +66,7 @@ export const create = mutation({
     ipAddress: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    await requireAuth(ctx);
     return await ctx.db.insert("auditLogs", {
       userId: args.userId,
       action: args.action as any,

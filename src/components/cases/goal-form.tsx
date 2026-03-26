@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -10,10 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
-const CATEGORIES = ["Health", "Housing", "Employment", "Education", "Financial", "Social", "Legal", "Other"];
-const STATUSES = ["NotStarted", "InProgress", "Completed", "OnHold"];
+const CATEGORIES = ["Housing", "Employment", "Education", "Health", "Financial", "Legal", "Social", "LifeSkills", "Other"];
+const STATUSES = ["NotStarted", "InProgress", "OnHold", "Completed", "Abandoned"];
 
 interface GoalFormProps {
   caseId: Id<"cases">;
@@ -58,7 +57,7 @@ export function GoalForm({ caseId, clientId }: GoalFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <DialogHeader><DialogTitle>Create Goal</DialogTitle></DialogHeader>
+      <h2 className="text-lg font-semibold">Create Goal</h2>
       <div className="space-y-2">
         <Label htmlFor="goal-title">Title *</Label>
         <Input id="goal-title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g., Secure stable housing" required />

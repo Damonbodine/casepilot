@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -40,7 +39,7 @@ import { Loader2 } from "lucide-react";
 const resolutionOptions = ["Resolved", "ClientWithdrew", "Referred", "LostContact", "Other"] as const;
 
 const caseCloseSchema = z.object({
-  resolution: z.enum(resolutionOptions, { required_error: "Resolution type is required" }),
+  resolution: z.enum(resolutionOptions, { error: "This field is required" }),
   resolutionNotes: z.string().min(1, "Resolution notes are required"),
 });
 
@@ -73,8 +72,7 @@ export function CaseCloseDialog({ caseId, caseNumber, onSuccess, children }: Cas
       await updateStatus({
         id: caseId,
         status: "Closed",
-        resolution: values.resolution,
-        resolutionNotes: values.resolutionNotes,
+        reason: `${values.resolution}: ${values.resolutionNotes}`,
       });
       toast({ title: "Case closed", description: `Case ${caseNumber} has been closed successfully.` });
       setOpen(false);
@@ -89,7 +87,7 @@ export function CaseCloseDialog({ caseId, caseNumber, onSuccess, children }: Cas
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Close Case {caseNumber}</DialogTitle>

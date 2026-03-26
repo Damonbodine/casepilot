@@ -1,0 +1,47 @@
+[     674ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1173ms] Error: [CONVEX Q(dashboard:getCaseloadStats)] [Request ID: 995e65f460058a95] Server Error
+Could not find public function for 'dashboard:getCaseloadStats'. Did you forget to run `npx convex dev` or `npx convex deploy`?
+
+  Called by client
+    at OptimisticQueryResults.queryResult (http://localhost:3333/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:2697:19)
+    at BaseConvexClient.localQueryResult (http://localhost:3333/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:4559:44)
+    at Object.localQueryResult (http://localhost:3333/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6534:44)
+    at QueriesObserver.getLocalResults (http://localhost:3333/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6091:31)
+    at useQueriesHelper.useMemo[subscription] (http://localhost:3333/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6294:41)
+    at useSubscription.useEffect.checkForUpdates (http://localhost:3333/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6206:43)
+    at basicStateReducer (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:4797:47)
+    at updateReducerImpl (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:4879:79)
+    at updateReducer (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:4829:16)
+    at Object.useState (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:15492:24)
+    at exports.useState (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_0rpq4pf._.js:1754:36)
+    at useSubscription (http://localhost:3333/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6177:205)
+    at useQueriesHelper (http://localhost:3333/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6308:201)
+    at useQueries (http://localhost:3333/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6274:12)
+    at useQuery (http://localhost:3333/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6771:200)
+    at CaseloadDashboard (http://localhost:3333/_next/static/chunks/_0d7wq81._.js:491:191)
+    at Object.react_stack_bottom_frame (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:15037:24)
+    at renderWithHooks (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:6081:21)
+    at beginWork (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:965:74)
+    at performUnitOfWork (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9555:97)
+    at workLoopSync (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9449:40)
+    at renderRootSync (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3333/_next/static/chunks/node_modules_next_dist_compiled_0rpq4pf._.js:2647:64)
+[    3410ms] [ERROR] WebSocket connection to 'ws://localhost:3333/_next/webpack-hmr?id=jqHAqxaL50sRI4tyx18Ep' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[    4411ms] [ERROR] WebSocket connection to 'ws://localhost:3333/_next/webpack-hmr?id=jqHAqxaL50sRI4tyx18Ep' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[    5415ms] [ERROR] WebSocket connection to 'ws://localhost:3333/_next/webpack-hmr?id=jqHAqxaL50sRI4tyx18Ep' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[    6416ms] [ERROR] WebSocket connection to 'ws://localhost:3333/_next/webpack-hmr?id=jqHAqxaL50sRI4tyx18Ep' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[    7159ms] [ERROR] WebSocket connection to 'wss://friendly-elk-878.convex.cloud/api/1.34.0/sync' failed:  @ http://localhost:3333/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:3223
+[    7161ms] [ERROR] WebSocket is already in CLOSING or CLOSED state. @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_115brz8._.js:2790
+[    7424ms] [ERROR] WebSocket connection to 'ws://localhost:3333/_next/webpack-hmr?id=jqHAqxaL50sRI4tyx18Ep' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[    8782ms] [ERROR] WebSocket is already in CLOSING or CLOSED state. @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_115brz8._.js:2790
+[   12426ms] [ERROR] WebSocket connection to 'ws://localhost:3333/_next/webpack-hmr?id=jqHAqxaL50sRI4tyx18Ep' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[   17430ms] [ERROR] WebSocket connection to 'ws://localhost:3333/_next/webpack-hmr?id=jqHAqxaL50sRI4tyx18Ep' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[   22431ms] [ERROR] WebSocket connection to 'ws://localhost:3333/_next/webpack-hmr?id=jqHAqxaL50sRI4tyx18Ep' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[   27433ms] [ERROR] WebSocket connection to 'ws://localhost:3333/_next/webpack-hmr?id=jqHAqxaL50sRI4tyx18Ep' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[   32435ms] [ERROR] WebSocket connection to 'ws://localhost:3333/_next/webpack-hmr?id=jqHAqxaL50sRI4tyx18Ep' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[   37438ms] [ERROR] WebSocket connection to 'ws://localhost:3333/_next/webpack-hmr?id=jqHAqxaL50sRI4tyx18Ep' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[   42441ms] [ERROR] WebSocket connection to 'ws://localhost:3333/_next/webpack-hmr?id=jqHAqxaL50sRI4tyx18Ep' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3333/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299

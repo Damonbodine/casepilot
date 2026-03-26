@@ -1,0 +1,49 @@
+[    2049ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   25480ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=-O27KhJvyrdzKVWOqbSE-' failed:  @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[   26484ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=-O27KhJvyrdzKVWOqbSE-' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[   27486ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=-O27KhJvyrdzKVWOqbSE-' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[   28489ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=-O27KhJvyrdzKVWOqbSE-' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[   35155ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3000/_next/static/chunks/0z6o_next_dist_0hleq62._.js:2431
+[   72621ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=9y6eCFZtgS0K5k8qWHMDv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0z6o_next_dist_client_027f8lj._.js:13299
+[   73624ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=9y6eCFZtgS0K5k8qWHMDv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0z6o_next_dist_client_027f8lj._.js:13299
+[   74627ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=9y6eCFZtgS0K5k8qWHMDv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0z6o_next_dist_client_027f8lj._.js:13299
+[   75628ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=9y6eCFZtgS0K5k8qWHMDv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0z6o_next_dist_client_027f8lj._.js:13299
+[   76629ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=9y6eCFZtgS0K5k8qWHMDv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0z6o_next_dist_client_027f8lj._.js:13299
+[   81631ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=9y6eCFZtgS0K5k8qWHMDv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0z6o_next_dist_client_027f8lj._.js:13299
+[   82254ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://working-cat-27.clerk.accounts.dev/v1/client/sign_ins?__clerk_api_version=2025-11-10&_clerk_js_version=6.3.3&__clerk_db_jwt=dvb_3BTIXoqW6QLPXMSndQL1rpFkhqU:0
+[   82265ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/sign-in:0
+[   82268ms] TypeError: Failed to fetch
+    at fetchServerAction (http://localhost:3000/_next/static/chunks/0z6o_next_dist_client_027f8lj._.js:11109:23)
+[   82272ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/__nextjs_original-stack-frames:0
+[   82277ms] [ERROR] WebSocket is already in CLOSING or CLOSED state. @ http://localhost:3000/_next/static/chunks/0z6o_next_dist_0hleq62._.js:2790
+[   86633ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=9y6eCFZtgS0K5k8qWHMDv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0z6o_next_dist_client_027f8lj._.js:13299
+[   91637ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=9y6eCFZtgS0K5k8qWHMDv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0z6o_next_dist_client_027f8lj._.js:13299
+[   96638ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=9y6eCFZtgS0K5k8qWHMDv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0z6o_next_dist_client_027f8lj._.js:13299
+[  101640ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=9y6eCFZtgS0K5k8qWHMDv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0z6o_next_dist_client_027f8lj._.js:13299
+[  106644ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=9y6eCFZtgS0K5k8qWHMDv' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0z6o_next_dist_client_027f8lj._.js:13299
+[  112959ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  113908ms] Error: [CONVEX Q(users:getCurrentUser)] [Request ID: 6f856d8a927f18c6] Server Error
+Could not find public function for 'users:getCurrentUser'. Did you forget to run `npx convex dev` or `npx convex deploy`?
+
+  Called by client
+    at OptimisticQueryResults.queryResult (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:2697:19)
+    at BaseConvexClient.localQueryResult (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:4559:44)
+    at Object.localQueryResult (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6534:44)
+    at QueriesObserver.getLocalResults (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6091:31)
+    at useQueriesHelper.useMemo[subscription] (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6294:41)
+    at useSubscription.useEffect.checkForUpdates (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6206:43)
+    at basicStateReducer (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:4797:47)
+    at dispatchSetStateInternal (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:5634:78)
+    at dispatchSetState (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js:5615:9)
+    at useSubscription.useEffect.checkForUpdates (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6201:21)
+    at QueriesObserver.notifyListeners (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6158:13)
+    at http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6137:53
+    at ConvexReactClient.transition (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6736:21)
+    at ConvexReactClient.handleTransition (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6726:14)
+    at PaginatedQueryClient.onTransition (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:6447:289)
+    at PaginatedQueryClient.onBaseTransition (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:4988:14)
+    at http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:4872:63
+    at BaseConvexClient.handleTransition (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:4466:13)
+    at BaseConvexClient.notifyOnQueryResultChanges (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:4446:14)
+    at WebSocketManager.onMessage (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:4357:34)
+    at ws.onmessage (http://localhost:3000/_next/static/chunks/node_modules_convex_dist_esm_00xikuf._.js:3306:35)

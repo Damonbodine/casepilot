@@ -4,12 +4,21 @@ import { requireAuth, requireRole } from "./lib/auth";
 
 export const list = query({
   args: {
-    orgId: v.id("organizations"),
+    orgId: v.optional(v.id("organizations")),
     status: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
-    const all = await ctx.db.query("referrals").order("desc").collect();
+    const user = await requireAuth(ctx);
+    // Get all cases for the org to scope referrals
+    const effectiveOrgId = args.orgId ?? user.organizationId;
+    const orgCases = await ctx.db
+      .query("cases")
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
+      .collect();
+    const caseIds = new Set(orgCases.map((c) => c._id));
+    let all = await ctx.db.query("referrals").order("desc").collect();
+    // Filter to only referrals belonging to org cases
+    all = all.filter((r) => caseIds.has(r.caseId));
     if (args.status) {
       return all.filter((r) => r.status === args.status);
     }
@@ -48,13 +57,20 @@ export const listByCase = query({
 
 export const listAll = query({
   args: {
-    orgId: v.id("organizations"),
+    orgId: v.optional(v.id("organizations")),
     status: v.optional(v.string()),
     partnerId: v.optional(v.id("partners")),
   },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
+    const user = await requireAuth(ctx);
+    const effectiveOrgId = args.orgId ?? user.organizationId;
+    const orgCases = await ctx.db
+      .query("cases")
+      .withIndex("by_organization", (q) => q.eq("organizationId", effectiveOrgId))
+      .collect();
+    const caseIds = new Set(orgCases.map((c) => c._id));
     let results = await ctx.db.query("referrals").order("desc").collect();
+    results = results.filter((r) => caseIds.has(r.caseId));
     if (args.status) {
       results = results.filter((r) => r.status === args.status);
     }
@@ -68,10 +84,12 @@ export const listAll = query({
 export const create = mutation({
   args: {
     caseId: v.id("cases"),
+    clientId: v.optional(v.id("clients")),
     partnerId: v.id("partners"),
     reason: v.string(),
     urgency: v.optional(v.string()),
     notes: v.optional(v.string()),
+    status: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await requireRole(ctx, ["Admin", "CaseManager", "CaseWorker"]);
@@ -84,13 +102,13 @@ export const create = mutation({
     const now = Date.now();
     const referralId = await ctx.db.insert("referrals", {
       caseId: args.caseId,
-      clientId: caseDoc.clientId,
+      clientId: args.clientId ?? caseDoc.clientId,
       partnerId: args.partnerId,
       direction: "Outgoing",
       referredById: user._id,
       reason: args.reason,
       serviceNeeded: args.reason,
-      status: "Pending",
+      status: (args.status as any) || "Pending",
       urgency: (args.urgency as any) || "Medium",
       notes: args.notes,
       createdAt: now,

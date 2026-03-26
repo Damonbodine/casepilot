@@ -1,8 +1,8 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface ServiceDeliveryFormProps {
   caseId: Id<"cases">;
@@ -19,7 +18,7 @@ interface ServiceDeliveryFormProps {
 
 export function ServiceDeliveryForm({ caseId, clientId }: ServiceDeliveryFormProps) {
   const createDelivery = useMutation(api.serviceDeliveries.create);
-  const services = useQuery(api.services.list);
+  const services = useAuthedQuery(api.services.list, {});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serviceId, setServiceId] = useState("");
   const [deliveryDate, setDeliveryDate] = useState(new Date().toISOString().split("T")[0]);
@@ -57,7 +56,7 @@ export function ServiceDeliveryForm({ caseId, clientId }: ServiceDeliveryFormPro
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <DialogHeader><DialogTitle>Log Service Delivery</DialogTitle></DialogHeader>
+      <h2 className="text-lg font-semibold">Log Service Delivery</h2>
       <div className="space-y-2">
         <Label>Service *</Label>
         <Select value={serviceId} onValueChange={setServiceId}>

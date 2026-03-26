@@ -1,12 +1,11 @@
-// @ts-nocheck
 "use client";
 
-import { useQuery } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import Link from "next/link";
 
 export default function CasesListPage() {
-  const cases = useQuery(api.cases.list, {});
+  const cases = useAuthedQuery(api.cases.list, {});
   if (!cases) return <div className="p-6">Loading cases...</div>;
 
   return (

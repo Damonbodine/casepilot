@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -36,11 +35,11 @@ const contactMethodOptions = ["InPerson", "Phone", "Email", "VideoCall", "None"]
 
 const caseNoteFormSchema = z.object({
   content: z.string().min(1, "Note content is required"),
-  category: z.enum(categoryOptions, { required_error: "Category is required" }),
-  isPrivate: z.boolean().default(false),
-  isPinned: z.boolean().default(false),
+  category: z.enum(categoryOptions, { error: "This field is required" }),
+  isPrivate: z.boolean().optional(),
+  isPinned: z.boolean().optional(),
   contactMethod: z.enum(contactMethodOptions).optional(),
-  contactDuration: z.coerce.number().min(0, "Duration must be positive").optional(),
+  contactDuration: z.number().min(0, "Duration must be positive").optional(),
 });
 
 type CaseNoteFormValues = z.infer<typeof caseNoteFormSchema>;
@@ -77,7 +76,6 @@ export function CaseNoteForm({ caseId, onSuccess }: CaseNoteFormProps) {
         isPrivate: values.isPrivate,
         isPinned: values.isPinned,
         contactMethod: values.contactMethod,
-        contactDuration: values.contactDuration,
       });
       toast({ title: "Note added", description: "Case note has been added successfully." });
       form.reset();

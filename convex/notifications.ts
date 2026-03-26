@@ -3,10 +3,15 @@ import { query, mutation } from "./_generated/server";
 import { requireAuth, requireRole } from "./lib/auth";
 
 export const list = query({
-  args: { orgId: v.id("organizations") },
+  args: { orgId: v.optional(v.id("organizations")) },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
-    return await ctx.db.query("notifications").order("desc").take(100);
+    const user = await requireAuth(ctx);
+    // Filter by the authenticated user to prevent cross-org data leaks
+    return await ctx.db
+      .query("notifications")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .order("desc")
+      .take(100);
   },
 });
 
@@ -25,41 +30,43 @@ export const getById = query({
 
 export const listForUser = query({
   args: {
-    userId: v.id("users"),
+    userId: v.optional(v.id("users")),
     unreadOnly: v.optional(v.boolean()),
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const user = await requireAuth(ctx);
-    if (user._id !== args.userId && user.role !== "Admin") {
+    const effectiveUserId = args.userId ?? user._id;
+    if (user._id !== effectiveUserId && user.role !== "Admin") {
       throw new Error("Your role does not have permission for this action");
     }
     const lim = args.limit ?? 50;
     if (args.unreadOnly) {
       return await ctx.db
         .query("notifications")
-        .withIndex("by_user_isRead", (q) => q.eq("userId", args.userId).eq("isRead", false))
+        .withIndex("by_user_isRead", (q) => q.eq("userId", effectiveUserId).eq("isRead", false))
         .order("desc")
         .take(lim);
     }
     return await ctx.db
       .query("notifications")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .withIndex("by_user", (q) => q.eq("userId", effectiveUserId))
       .order("desc")
       .take(lim);
   },
 });
 
 export const getUnreadCount = query({
-  args: { userId: v.id("users") },
+  args: { userId: v.optional(v.id("users")) },
   handler: async (ctx, args) => {
     const user = await requireAuth(ctx);
-    if (user._id !== args.userId && user.role !== "Admin") {
+    const effectiveUserId = args.userId ?? user._id;
+    if (user._id !== effectiveUserId && user.role !== "Admin") {
       throw new Error("Your role does not have permission for this action");
     }
     const unread = await ctx.db
       .query("notifications")
-      .withIndex("by_user_isRead", (q) => q.eq("userId", args.userId).eq("isRead", false))
+      .withIndex("by_user_isRead", (q) => q.eq("userId", effectiveUserId).eq("isRead", false))
       .collect();
     return { count: unread.length };
   },
@@ -104,15 +111,16 @@ export const markAsRead = mutation({
 });
 
 export const markAllAsRead = mutation({
-  args: { userId: v.id("users") },
+  args: { userId: v.optional(v.id("users")) },
   handler: async (ctx, args) => {
     const user = await requireAuth(ctx);
-    if (user._id !== args.userId) {
+    const effectiveUserId = args.userId ?? user._id;
+    if (user._id !== effectiveUserId && user.role !== "Admin") {
       throw new Error("Your role does not have permission for this action");
     }
     const unread = await ctx.db
       .query("notifications")
-      .withIndex("by_user_isRead", (q) => q.eq("userId", args.userId).eq("isRead", false))
+      .withIndex("by_user_isRead", (q) => q.eq("userId", effectiveUserId).eq("isRead", false))
       .collect();
     for (const n of unread) {
       await ctx.db.patch(n._id, { isRead: true });

@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -15,12 +14,12 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 
 const STEPS = ["Demographics", "Contact Info", "Emergency Contact", "Needs Assessment", "Case Details", "Review & Submit"];
-const GENDERS = ["Male", "Female", "NonBinary", "Other", "PreferNotToSay"];
+const GENDERS = ["Male", "Female", "NonBinary", "TransMale", "TransFemale", "Other", "PreferNotToSay"];
 const RACES = ["White", "Black", "Hispanic", "Asian", "NativeAmerican", "PacificIslander", "MultiRacial", "Other", "PreferNotToSay"];
-const LANGUAGES = ["English", "Spanish", "French", "Mandarin", "Arabic", "Vietnamese", "Tagalog", "Other"];
-const PRIMARY_NEEDS = ["Housing", "Employment", "MentalHealth", "SubstanceAbuse", "DomesticViolence", "LegalAid", "FoodInsecurity", "Healthcare", "Education", "Other"];
+const LANGUAGES = ["English", "Spanish", "French", "Mandarin", "Vietnamese", "Arabic", "Other"];
+const PRIMARY_NEEDS = ["Housing", "Employment", "MentalHealth", "SubstanceAbuse", "DomesticViolence", "ChildWelfare", "ElderCare", "Disability", "Financial", "Legal", "Medical", "Other"];
 const RISK_LEVELS = ["Low", "Medium", "High", "Critical"];
-const CASE_TYPES = ["Housing", "Employment", "MentalHealth", "SubstanceAbuse", "DomesticViolence", "LegalAid", "FoodInsecurity", "Healthcare", "Education", "General"];
+const CASE_TYPES = ["Housing", "Employment", "MentalHealth", "SubstanceAbuse", "DomesticViolence", "ChildWelfare", "ElderCare", "Disability", "Financial", "Legal", "Medical", "General"];
 const PRIORITIES = ["Low", "Medium", "High", "Urgent"];
 
 export function ClientIntakeForm() {
@@ -55,11 +54,11 @@ export function ClientIntakeForm() {
         emergencyContactName: form.emergencyContactName, emergencyContactPhone: form.emergencyContactPhone,
         emergencyContactRelation: form.emergencyContactRelation,
         primaryNeed: form.primaryNeed, riskLevel: form.riskLevel, notes: form.notes || undefined,
-      });
+      } as any);
       await createCase({
         clientId, type: form.caseType, priority: form.casePriority,
         description: form.caseDescription, riskAtIntake: form.riskLevel,
-      });
+      } as any);
       router.push("/clients");
     } catch (err: any) {
       setError(err.message || "Failed to submit intake.");

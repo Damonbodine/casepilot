@@ -1,8 +1,7 @@
-// @ts-nocheck
 "use client";
 
 import { ReactNode } from "react";
-import { useQuery } from "convex/react";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import { Loader2, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,7 @@ interface RoleGuardProps {
 
 export function RoleGuard({ allowedRoles, children, fallback }: RoleGuardProps) {
   const router = useRouter();
-  const currentUser = useQuery(api.users.getCurrentUser);
+  const currentUser = useAuthedQuery(api.users.getCurrentUser);
 
   if (currentUser === undefined) {
     return (

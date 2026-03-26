@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState } from "react";
@@ -36,7 +35,7 @@ const partnerCategoryOptions = ["Housing", "Employment", "MentalHealth", "Substa
 const partnerFormSchema = z.object({
   name: z.string().min(1, "Organization name is required"),
   description: z.string().optional(),
-  category: z.enum(partnerCategoryOptions, { required_error: "Category is required" }),
+  category: z.enum(partnerCategoryOptions, { error: "This field is required" }),
   address: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
@@ -45,7 +44,7 @@ const partnerFormSchema = z.object({
   email: z.string().email("Invalid email address"),
   website: z.string().url("Invalid URL").optional().or(z.literal("")),
   primaryContactName: z.string().min(1, "Primary contact name is required"),
-  isActive: z.boolean().default(true),
+  isActive: z.boolean().optional(),
 });
 
 type PartnerFormValues = z.infer<typeof partnerFormSchema>;
@@ -93,10 +92,10 @@ export function PartnerForm({ initialData, onSuccess }: PartnerFormProps) {
         website: values.website || undefined,
       };
       if (isEditing && initialData?._id) {
-        await updatePartner({ id: initialData._id, ...payload });
+        await updatePartner({ id: initialData._id, ...payload } as any);
         toast({ title: "Partner updated", description: "Partner organization has been updated successfully." });
       } else {
-        await createPartner(payload);
+        await createPartner(payload as any);
         toast({ title: "Partner created", description: "New partner organization has been created successfully." });
       }
       onSuccess?.();

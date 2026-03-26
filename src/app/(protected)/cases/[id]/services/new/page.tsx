@@ -1,11 +1,15 @@
-// @ts-nocheck
 "use client";
 
 import { ServiceDeliveryForm } from "@/components/cases/service-delivery-form";
+import { useAuthedQuery } from "@/hooks/use-authed-query";
+import { api } from "@/convex/_generated/api";
 import { useParams } from "next/navigation";
+import { Id } from "@/convex/_generated/dataModel";
 
 export default function NewServiceDeliveryPage() {
   const params = useParams();
-  const id = params.id as string;
-  return <ServiceDeliveryForm id={id} />;
+  const caseId = params.id as Id<"cases">;
+  const caseData = useAuthedQuery(api.cases.getById, { id: caseId });
+  if (!caseData) return <div className="p-6">Loading...</div>;
+  return <ServiceDeliveryForm caseId={caseId} clientId={caseData.clientId} />;
 }
