@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { AiGenerateButton } from "@/components/ai-generate-button";
 
 const caseTypeOptions = ["Housing", "Employment", "MentalHealth", "SubstanceAbuse", "DomesticViolence", "LegalAid", "FoodInsecurity", "Healthcare", "Education", "General"] as const;
 const priorityOptions = ["Low", "Medium", "High", "Urgent"] as const;
@@ -219,7 +220,14 @@ export function CaseForm({ initialData, clientId, onSuccess }: CaseFormProps) {
 
         <FormField control={form.control} name="description" render={({ field }) => (
           <FormItem>
-            <FormLabel>Description *</FormLabel>
+            <div className="flex items-center justify-between">
+              <FormLabel>Description *</FormLabel>
+              <AiGenerateButton
+                fieldName="caseDescription"
+                context={{ type: form.getValues("type"), priority: form.getValues("priority"), riskAtIntake: form.getValues("riskAtIntake") }}
+                onGenerated={(text) => form.setValue("description", text, { shouldValidate: true })}
+              />
+            </div>
             <FormControl><Textarea placeholder="Describe the case context and presenting issues..." className="min-h-[100px]" {...field} /></FormControl>
             <FormMessage />
           </FormItem>
@@ -227,7 +235,14 @@ export function CaseForm({ initialData, clientId, onSuccess }: CaseFormProps) {
 
         <FormField control={form.control} name="intakeAssessment" render={({ field }) => (
           <FormItem>
-            <FormLabel>Intake Assessment</FormLabel>
+            <div className="flex items-center justify-between">
+              <FormLabel>Intake Assessment</FormLabel>
+              <AiGenerateButton
+                fieldName="intakeAssessment"
+                context={{ type: form.getValues("type"), priority: form.getValues("priority"), riskAtIntake: form.getValues("riskAtIntake"), description: form.getValues("description") }}
+                onGenerated={(text) => form.setValue("intakeAssessment", text, { shouldValidate: true })}
+              />
+            </div>
             <FormControl><Textarea placeholder="Initial intake assessment notes..." className="min-h-[80px]" {...field} /></FormControl>
             <FormMessage />
           </FormItem>

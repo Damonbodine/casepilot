@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { AiGenerateButton } from "@/components/ai-generate-button";
 
 const categoryOptions = ["General", "Clinical", "Legal", "Administrative", "FollowUp", "CrisisIntervention"] as const;
 const contactMethodOptions = ["InPerson", "Phone", "Email", "VideoCall", "None"] as const;
@@ -92,7 +93,14 @@ export function CaseNoteForm({ caseId, onSuccess }: CaseNoteFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField control={form.control} name="content" render={({ field }) => (
           <FormItem>
-            <FormLabel>Note Content *</FormLabel>
+            <div className="flex items-center justify-between">
+              <FormLabel>Note Content *</FormLabel>
+              <AiGenerateButton
+                fieldName="caseNotes"
+                context={{ category: form.getValues("category"), contactMethod: form.getValues("contactMethod") }}
+                onGenerated={(text) => form.setValue("content", text, { shouldValidate: true })}
+              />
+            </div>
             <FormControl><Textarea placeholder="Enter your case note..." className="min-h-[120px]" {...field} /></FormControl>
             <FormMessage />
           </FormItem>

@@ -31,9 +31,9 @@ export const seed = internalMutation({
 
     // === 2. Users (one per role + extra CaseWorker) ===
     const adminId = await ctx.db.insert("users", {
-      clerkId: "clerk_seed_admin_001",
-      name: "Sarah Chen",
-      email: "sarah.chen@hopecommunityservices.org",
+      clerkId: "user_3BV4YzajQ96nGS3hlBDld9VcLa8",
+      name: "Demo User",
+      email: "demo@factory512.dev",
       role: "Admin",
       organizationId: orgId,
       isActive: true,

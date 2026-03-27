@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { AiGenerateButton } from "@/components/ai-generate-button";
 
 const goalCategoryOptions = ["Housing", "Employment", "MentalHealth", "SubstanceAbuse", "Education", "LifeSkills", "Health", "Financial", "Legal", "Social", "Other"] as const;
 const goalPriorityOptions = ["Low", "Medium", "High"] as const;
@@ -115,7 +116,14 @@ export function GoalForm({ caseId, clientId, initialData, onSuccess }: GoalFormP
 
         <FormField control={form.control} name="description" render={({ field }) => (
           <FormItem>
-            <FormLabel>Description *</FormLabel>
+            <div className="flex items-center justify-between">
+              <FormLabel>Description *</FormLabel>
+              <AiGenerateButton
+                fieldName="goalDescription"
+                context={{ title: form.getValues("title"), category: form.getValues("category"), priority: form.getValues("priority") }}
+                onGenerated={(text) => form.setValue("description", text, { shouldValidate: true })}
+              />
+            </div>
             <FormControl><Textarea placeholder="Describe the SMART goal in detail..." className="min-h-[100px]" {...field} /></FormControl>
             <FormDescription>Write a Specific, Measurable, Achievable, Relevant, and Time-bound goal</FormDescription>
             <FormMessage />
@@ -170,7 +178,14 @@ export function GoalForm({ caseId, clientId, initialData, onSuccess }: GoalFormP
 
         <FormField control={form.control} name="milestones" render={({ field }) => (
           <FormItem>
-            <FormLabel>Milestones</FormLabel>
+            <div className="flex items-center justify-between">
+              <FormLabel>Milestones</FormLabel>
+              <AiGenerateButton
+                fieldName="goalMilestones"
+                context={{ title: form.getValues("title"), description: form.getValues("description"), category: form.getValues("category") }}
+                onGenerated={(text) => form.setValue("milestones", text, { shouldValidate: true })}
+              />
+            </div>
             <FormControl><Textarea placeholder="List milestones, one per line (e.g., Complete housing application, Attend housing interview)" className="min-h-[80px]" {...field} /></FormControl>
             <FormDescription>Optional: list key milestones for tracking progress</FormDescription>
             <FormMessage />

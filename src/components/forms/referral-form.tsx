@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { AiGenerateButton } from "@/components/ai-generate-button";
 
 const directionOptions = ["Outgoing", "Incoming"] as const;
 const urgencyOptions = ["Routine", "Urgent", "Emergency"] as const;
@@ -147,7 +148,14 @@ export function ReferralForm({ caseId, clientId, onSuccess }: ReferralFormProps)
 
         <FormField control={form.control} name="reason" render={({ field }) => (
           <FormItem>
-            <FormLabel>Reason *</FormLabel>
+            <div className="flex items-center justify-between">
+              <FormLabel>Reason *</FormLabel>
+              <AiGenerateButton
+                fieldName="referralReason"
+                context={{ serviceNeeded: form.getValues("serviceNeeded"), urgency: form.getValues("urgency"), direction: form.getValues("direction") }}
+                onGenerated={(text) => form.setValue("reason", text, { shouldValidate: true })}
+              />
+            </div>
             <FormControl><Textarea placeholder="Reason for the referral..." className="min-h-[80px]" {...field} /></FormControl>
             <FormMessage />
           </FormItem>
