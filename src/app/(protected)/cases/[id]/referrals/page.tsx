@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { ReferralList } from "@/components/cases/referral-list";
 import { useParams } from "next/navigation";
 

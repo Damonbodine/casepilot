@@ -1,141 +1,119 @@
+/* Factory512 Unified Design System — CasePilot (Blue)
+ *
+ * Dark mode with oklch tokens. Tailwind v4 syntax.
+ */
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-chart-1: hsl(var(--chart-1));
-  --color-chart-2: hsl(var(--chart-2));
-  --color-chart-3: hsl(var(--chart-3));
-  --color-chart-4: hsl(var(--chart-4));
-  --color-chart-5: hsl(var(--chart-5));
-  --color-sidebar: hsl(var(--sidebar-background));
-  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
-  --color-sidebar-primary: hsl(var(--sidebar-primary));
-  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
-  --color-sidebar-accent: hsl(var(--sidebar-accent));
-  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
-  --color-sidebar-border: hsl(var(--sidebar-border));
-  --color-sidebar-ring: hsl(var(--sidebar-ring));
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* ─── Base Palette ──────────────────────────────────── */
+  --color-background: oklch(0.145 0.014 260);
+  --color-foreground: oklch(0.93 0.006 260);
+
+  /* ─── Cards & Surfaces ─────────────────────────────── */
+  --color-card: oklch(0.178 0.014 260);
+  --color-card-foreground: oklch(0.93 0.006 260);
+  --color-popover: oklch(0.178 0.014 260);
+  --color-popover-foreground: oklch(0.93 0.006 260);
+
+  /* ─── Primary (CasePilot Blue) ─────────────────────── */
+  --color-primary: oklch(0.62 0.19 230);
+  --color-primary-foreground: oklch(0.98 0.005 260);
+
+  /* ─── Secondary ────────────────────────────────────── */
+  --color-secondary: oklch(0.22 0.014 260);
+  --color-secondary-foreground: oklch(0.88 0.006 260);
+
+  /* ─── Muted ────────────────────────────────────────── */
+  --color-muted: oklch(0.21 0.012 260);
+  --color-muted-foreground: oklch(0.60 0.01 260);
+
+  /* ─── Accent ───────────────────────────────────────── */
+  --color-accent: oklch(0.22 0.014 260);
+  --color-accent-foreground: oklch(0.93 0.006 260);
+
+  /* ─── Destructive ──────────────────────────────────── */
+  --color-destructive: oklch(0.55 0.2 25);
+  --color-destructive-foreground: oklch(0.98 0.005 25);
+
+  /* ─── Borders & Inputs ─────────────────────────────── */
+  --color-border: oklch(0.26 0.012 260);
+  --color-input: oklch(0.26 0.012 260);
+  --color-ring: oklch(0.62 0.19 230);
+
+  /* ─── Sidebar ──────────────────────────────────────── */
+  --color-sidebar: oklch(0.16 0.014 260);
+  --color-sidebar-foreground: oklch(0.88 0.006 260);
+  --color-sidebar-primary: oklch(0.62 0.19 230);
+  --color-sidebar-primary-foreground: oklch(0.98 0.005 260);
+  --color-sidebar-accent: oklch(0.22 0.018 260);
+  --color-sidebar-accent-foreground: oklch(0.93 0.006 260);
+  --color-sidebar-border: oklch(0.24 0.012 260);
+  --color-sidebar-ring: oklch(0.62 0.19 230);
+
+  /* ─── Chart Colors ─────────────────────────────────── */
+  --color-chart-1: oklch(0.65 0.18 250);
+  --color-chart-2: oklch(0.70 0.16 160);
+  --color-chart-3: oklch(0.72 0.15 85);
+  --color-chart-4: oklch(0.60 0.20 25);
+  --color-chart-5: oklch(0.65 0.18 310);
+
+  /* ─── Semantic Status Colors ───────────────────────── */
+  --color-success: oklch(0.65 0.17 150);
+  --color-success-foreground: oklch(0.98 0.005 150);
+  --color-warning: oklch(0.75 0.15 85);
+  --color-warning-foreground: oklch(0.20 0.02 85);
+  --color-info: oklch(0.65 0.15 240);
+  --color-info-foreground: oklch(0.98 0.005 240);
+
+  /* ─── Radius ───────────────────────────────────────── */
+  --radius: 0.625rem;
+
+  /* ─── Fonts ────────────────────────────────────────── */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
-:root {
-  --background: 220 14% 96%;
-  --foreground: 220 40% 10%;
-  --card: 0 0% 100%;
-  --card-foreground: 220 40% 10%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 220 40% 10%;
-  --primary: 210 90% 40%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 220 14% 90%;
-  --secondary-foreground: 220 40% 10%;
-  --muted: 220 14% 92%;
-  --muted-foreground: 220 10% 45%;
-  --accent: 220 14% 90%;
-  --accent-foreground: 220 40% 10%;
-  --destructive: 0 70% 50%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 220 14% 92%;
-  --input: 220 14% 92%;
-  --ring: 210 90% 40%;
-  --radius: 0.5rem;
-  --chart-1: 210 90% 40%;
-  --chart-2: 153 15% 49%;
-  --chart-3: 24 68% 70%;
-  --chart-4: 168 36% 46%;
-  --chart-5: 357 33% 58%;
-  --sidebar-background: 220 40% 10%;
-  --sidebar-foreground: 220 10% 90%;
-  --sidebar-primary: 210 90% 40%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 220 40% 15%;
-  --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-border: 220 40% 12%;
-  --sidebar-ring: 210 90% 40%;
+/* ─── Base Styles ──────────────────────────────────────── */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
 }
 
-.dark {
-  --background: 220 14% 96%;
-  --foreground: 220 40% 10%;
-  --card: 0 0% 100%;
-  --card-foreground: 220 40% 10%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 220 40% 10%;
-  --primary: 210 90% 40%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 220 14% 90%;
-  --secondary-foreground: 220 40% 10%;
-  --muted: 220 14% 92%;
-  --muted-foreground: 220 10% 45%;
-  --accent: 220 14% 90%;
-  --accent-foreground: 220 40% 10%;
-  --destructive: 0 70% 50%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 220 14% 92%;
-  --input: 220 14% 92%;
-  --ring: 210 90% 40%;
-  --chart-1: 210 90% 40%;
-  --chart-2: 153 15% 45%;
-  --chart-3: 24 68% 60%;
-  --chart-4: 168 36% 50%;
-  --chart-5: 357 45% 50%;
-  --sidebar-background: 220 40% 10%;
-  --sidebar-foreground: 220 10% 90%;
-  --sidebar-primary: 210 90% 40%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 220 40% 15%;
-  --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-border: 220 40% 12%;
-  --sidebar-ring: 210 90% 40%;
+/* ─── Status Badge Utilities ───────────────────────────── */
+
+@layer components {
+  .badge-success {
+    @apply bg-success/15 text-success border-success/25;
+  }
+  .badge-warning {
+    @apply bg-warning/15 text-warning border-warning/25;
+  }
+  .badge-destructive {
+    @apply bg-destructive/15 text-destructive border-destructive/25;
+  }
+  .badge-info {
+    @apply bg-info/15 text-info border-info/25;
+  }
+  .badge-muted {
+    @apply bg-muted text-muted-foreground border-border;
+  }
 }
 
-* {
-  border-color: hsl(var(--border));
-}
-
-body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-size: 14px;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  letter-spacing: -0.02em;
-  font-weight: 700;
-}
+/* ─── App-Specific Utilities ───────────────────────────── */
 
 /* Custom scrollbar styles */
 .scrollbar-thin {
   scrollbar-width: thin;
-  scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+  scrollbar-color: oklch(0.60 0.01 260 / 0.3) transparent;
 }
 .scrollbar-thin::-webkit-scrollbar {
   width: 6px;
@@ -145,49 +123,9 @@ h1, h2, h3, h4, h5, h6 {
   background: transparent;
 }
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background-color: hsl(var(--muted-foreground) / 0.3);
+  background-color: oklch(0.60 0.01 260 / 0.3);
   border-radius: 3px;
 }
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background-color: hsl(var(--muted-foreground) / 0.5);
-}
-
-/* Card shadow utilities */
-.shadow-card {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-.shadow-card-hover {
-  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.04);
-}
-
-/* Status badge container colors */
-.bg-status-intake {
-  background-color: hsl(212 52% 24% / 0.12);
-  color: hsl(212 52% 24%);
-}
-.bg-status-assessment {
-  background-color: hsl(270 40% 92%);
-  color: hsl(270 40% 40%);
-}
-.bg-status-active {
-  background-color: hsl(153 15% 49% / 0.15);
-  color: hsl(153 20% 38%);
-}
-.bg-status-monitoring {
-  background-color: hsl(24 68% 70% / 0.2);
-  color: hsl(24 60% 40%);
-}
-.bg-status-overdue {
-  background-color: hsl(357 80% 95%);
-  color: hsl(357 50% 42%);
-}
-
-/* Elegant SaaS Refinements */
-.card, [data-sidebar="sidebar"] {
-  border: none !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.02) !important;
-  background-color: hsl(0 0% 100%) !important;
-}
-table th, table td {
-  border-bottom: 1px solid hsl(var(--border)) !important;
+  background-color: oklch(0.60 0.01 260 / 0.5);
 }

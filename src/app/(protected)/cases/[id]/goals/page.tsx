@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { GoalsList } from "@/components/cases/goals-list";
 import { useParams } from "next/navigation";
 

@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { ClientProfile } from "@/components/clients/client-profile";
 import { useParams } from "next/navigation";
 

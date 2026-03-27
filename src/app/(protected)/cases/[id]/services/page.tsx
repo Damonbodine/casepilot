@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { ServiceDeliveryList } from "@/components/cases/service-delivery-list";
 import { useParams } from "next/navigation";
 

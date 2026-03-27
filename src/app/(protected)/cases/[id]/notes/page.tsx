@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { CaseNotesList } from "@/components/cases/case-notes-list";
 import { useParams } from "next/navigation";
 

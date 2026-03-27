@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { CaseActivityFeed } from "@/components/cases/case-activity-feed";
 import { useParams } from "next/navigation";
 
