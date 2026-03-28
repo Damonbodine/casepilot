@@ -3,7 +3,7 @@
 import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { withPreservedDemoQuery } from "@/lib/demo";
 
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/dashboard/caseload", icon: LayoutDashboard, roles: ["Admin", "CaseManager", "CaseWorker", "IntakeSpecialist", "ReadOnlyViewer"] },
@@ -44,6 +45,7 @@ const NAV_ITEMS = [
 export function AppSidebar() {
   const currentUser = useAuthedQuery(api.users.getCurrentUser);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   if (!currentUser) {
     return (
@@ -67,7 +69,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="p-4 border-b border-border">
-        <Link href="/dashboard" className="flex items-center gap-2">
+        <Link href={withPreservedDemoQuery("/dashboard", searchParams)} className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-sm">CP</span>
           </div>
@@ -80,7 +82,7 @@ export function AppSidebar() {
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton
                 isActive={pathname === item.href || pathname.startsWith(item.href + "/")}
-                render={<Link href={item.href} className="flex items-center gap-3" />}
+                render={<Link href={withPreservedDemoQuery(item.href, searchParams)} className="flex items-center gap-3" />}
               >
                 <item.icon className="h-4 w-4" />
                 <span>{item.label}</span>

@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { DemoMode } from "@/components/demo-mode";
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +25,7 @@ export default async function ProtectedLayout({
           <div className="container mx-auto p-6">
             {children}
           </div>
+          <DemoMode />
         </main>
       </div>
     </SidebarProvider>

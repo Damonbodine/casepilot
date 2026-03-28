@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { StatCard } from "@/components/ui/stat-card";
 import { Users, AlertTriangle, Clock, TrendingUp } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { DemoModeStartButton } from "@/components/demo-mode";
 
 export function ManagerDashboard() {
   const stats = useAuthedQuery(api.dashboard.getManagerStats, {});
@@ -27,16 +28,19 @@ export function ManagerDashboard() {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Team Overview</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="space-y-6" data-demo="manager-overview">
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="text-2xl font-bold">Team Overview</h1>
+        <DemoModeStartButton />
+      </div>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4" data-demo="manager-stats">
         <StatCard label="Team Members" value={stats.totalWorkers ?? 0} icon={<Users className="h-5 w-5" />} />
         <StatCard label="Total Active Cases" value={stats.totalActive ?? 0} icon={<TrendingUp className="h-5 w-5" />} />
         <StatCard label="Total Closed" value={stats.totalClosed ?? 0} icon={<AlertTriangle className="h-5 w-5" />} />
         <StatCard label="Total Clients" value={stats.totalClients ?? 0} icon={<Clock className="h-5 w-5" />} />
       </div>
 
-      <Card>
+      <Card data-demo="team-caseload">
         <CardHeader>
           <CardTitle>Team Caseload</CardTitle>
         </CardHeader>

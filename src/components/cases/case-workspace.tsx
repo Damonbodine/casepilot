@@ -36,7 +36,7 @@ export function CaseWorkspace({ caseId }: CaseWorkspaceProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-demo="case-workspace">
       <Card>
         <CardContent className="pt-6">
           <div className="flex items-start justify-between">

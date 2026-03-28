@@ -13,6 +13,8 @@ import { User, Phone, Mail, MapPin, AlertTriangle, Calendar } from "lucide-react
 import Link from "next/link";
 import { RiskAssessmentCard } from "@/components/ai/risk-assessment-card";
 import { ServiceRecommendations } from "@/components/ai/service-recommendations";
+import { useSearchParams } from "next/navigation";
+import { withPreservedDemoQuery } from "@/lib/demo";
 
 interface ClientProfileProps {
   clientId: Id<"clients">;
@@ -26,6 +28,7 @@ export function ClientProfile({ clientId }: ClientProfileProps) {
   const client = useAuthedQuery(api.clients.getById, { id: clientId });
   const cases = useAuthedQuery(api.cases.list, {});
   const documents = useAuthedQuery(api.documents.listByClient, { clientId });
+  const searchParams = useSearchParams();
 
   if (!client) {
     return (
@@ -39,7 +42,7 @@ export function ClientProfile({ clientId }: ClientProfileProps) {
   const clientCases = cases?.filter((c: any) => c.clientId === clientId) ?? [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-demo="client-profile">
       <Card>
         <CardContent className="pt-6">
           <div className="flex items-start gap-4">
@@ -118,7 +121,7 @@ export function ClientProfile({ clientId }: ClientProfileProps) {
               <TableBody>
                 {clientCases.map((c: any) => (
                   <TableRow key={c._id}>
-                    <TableCell><Link href={`/cases/${c._id}`} className="font-medium text-primary hover:underline">{c.caseNumber}</Link></TableCell>
+                    <TableCell><Link href={withPreservedDemoQuery(`/cases/${c._id}`, searchParams)} className="font-medium text-primary hover:underline">{c.caseNumber}</Link></TableCell>
                     <TableCell>{c.type}</TableCell>
                     <TableCell><Badge variant="secondary">{c.status}</Badge></TableCell>
                     <TableCell><Badge variant="outline">{c.priority}</Badge></TableCell>

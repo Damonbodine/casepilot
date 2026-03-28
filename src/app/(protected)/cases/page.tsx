@@ -5,19 +5,22 @@ export const dynamic = "force-dynamic";
 import { useAuthedQuery } from "@/hooks/use-authed-query";
 import { api } from "@/convex/_generated/api";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { withPreservedDemoQuery } from "@/lib/demo";
 
 export default function CasesListPage() {
   const cases = useAuthedQuery(api.cases.list, {});
+  const searchParams = useSearchParams();
   if (!cases) return <div className="p-6">Loading cases...</div>;
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-4" data-demo="cases-list">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Cases</h1>
       </div>
       <div className="space-y-2">
         {cases.map((c: any) => (
-          <Link key={c._id} href={`/cases/${c._id}`} className="block p-4 border rounded-lg hover:bg-muted/50">
+          <Link key={c._id} href={withPreservedDemoQuery(`/cases/${c._id}`, searchParams)} className="block p-4 border rounded-lg hover:bg-muted/50">
             <div className="font-medium">{c.caseNumber}</div>
             <div className="text-sm text-muted-foreground">{c.status} - {c.priority}</div>
           </Link>

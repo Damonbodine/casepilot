@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Search, X } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { withPreservedDemoQuery } from "@/lib/demo";
 
 const STATUSES = ["Active", "Inactive", "Waitlisted", "Discharged", "Referred"];
 const RISK_LEVELS = ["Low", "Medium", "High", "Critical"];
@@ -28,6 +30,7 @@ export function ClientDataTable({ organizationId }: ClientDataTableProps) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [riskFilter, setRiskFilter] = useState<string>("all");
+  const searchParams = useSearchParams();
 
   const clients = useAuthedQuery(api.clients.list, {});
 
@@ -59,7 +62,7 @@ export function ClientDataTable({ organizationId }: ClientDataTableProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-demo="clients-list">
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -104,7 +107,7 @@ export function ClientDataTable({ organizationId }: ClientDataTableProps) {
             {filtered.map((client: any) => (
               <TableRow key={client._id}>
                 <TableCell>
-                  <Link href={`/clients/${client._id}`} className="font-medium text-primary hover:underline">
+                  <Link href={withPreservedDemoQuery(`/clients/${client._id}`, searchParams)} className="font-medium text-primary hover:underline">
                     {client.firstName} {client.lastName}
                   </Link>
                 </TableCell>
