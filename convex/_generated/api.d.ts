@@ -9,6 +9,7 @@
  */
 
 import type * as ai from "../ai.js";
+import type * as aiHelpers from "../aiHelpers.js";
 import type * as auditLogs from "../auditLogs.js";
 import type * as caseActivities from "../caseActivities.js";
 import type * as caseNotes from "../caseNotes.js";
@@ -37,6 +38,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   ai: typeof ai;
+  aiHelpers: typeof aiHelpers;
   auditLogs: typeof auditLogs;
   caseActivities: typeof caseActivities;
   caseNotes: typeof caseNotes;

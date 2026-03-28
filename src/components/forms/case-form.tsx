@@ -37,6 +37,7 @@ import {
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { AiGenerateButton } from "@/components/ai-generate-button";
+import { SmartCaseAssignment } from "@/components/ai/smart-case-assignment";
 
 const caseTypeOptions = ["Housing", "Employment", "MentalHealth", "SubstanceAbuse", "DomesticViolence", "LegalAid", "FoodInsecurity", "Healthcare", "Education", "General"] as const;
 const priorityOptions = ["Low", "Medium", "High", "Urgent"] as const;
@@ -71,6 +72,7 @@ export function CaseForm({ initialData, clientId, onSuccess }: CaseFormProps) {
 
   const clients = useAuthedQuery(api.clients.list, {});
   const users = useAuthedQuery(api.users.list, {});
+  const currentUser = useAuthedQuery(api.users.getCurrentUser);
   const workers = users?.filter((u: any) => u.role === "CaseWorker" && u.isActive) ?? [];
   const managers = users?.filter((u: any) => (u.role === "CaseManager" || u.role === "Admin") && u.isActive) ?? [];
 
@@ -175,12 +177,20 @@ export function CaseForm({ initialData, clientId, onSuccess }: CaseFormProps) {
           <FormField control={form.control} name="assignedWorkerId" render={({ field }) => (
             <FormItem>
               <FormLabel>Assigned Worker *</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                 <FormControl><SelectTrigger><SelectValue placeholder="Select worker" /></SelectTrigger></FormControl>
                 <SelectContent>
                   {workers.map((u: any) => (<SelectItem key={u._id} value={u._id}>{u.name}</SelectItem>))}
                 </SelectContent>
               </Select>
+              {!isEditing && currentUser?.organizationId && (
+                <SmartCaseAssignment
+                  clientId={form.watch("clientId")}
+                  caseType={form.watch("type")}
+                  orgId={currentUser.organizationId}
+                  onSelectWorker={(id) => form.setValue("assignedWorkerId", id, { shouldValidate: true })}
+                />
+              )}
               <FormMessage />
             </FormItem>
           )} />

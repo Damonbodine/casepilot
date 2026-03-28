@@ -15,6 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Plus, Pin, Lock, MessageSquare } from "lucide-react";
+import { CaseNotesSummarizer } from "@/components/ai/case-notes-summarizer";
 
 const CATEGORIES = ["General", "Assessment", "Progress", "Incident", "ContactLog", "CourtUpdate", "ServicePlan", "Closure"];
 const CONTACT_METHODS = ["InPerson", "Phone", "Email", "VideoCall", "TextMessage", "Mail", "None"];
@@ -91,6 +92,8 @@ export function CaseNotesList({ caseId }: CaseNotesListProps) {
           </DialogContent>
         </Dialog>
       </div>
+
+      <CaseNotesSummarizer caseId={caseId} />
 
       {notes.length === 0 ? (
         <Card><CardContent className="py-8 text-center text-muted-foreground"><MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />No notes yet. Add the first note.</CardContent></Card>

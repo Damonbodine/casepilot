@@ -11,6 +11,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { User, Phone, Mail, MapPin, AlertTriangle, Calendar } from "lucide-react";
 import Link from "next/link";
+import { RiskAssessmentCard } from "@/components/ai/risk-assessment-card";
+import { ServiceRecommendations } from "@/components/ai/service-recommendations";
 
 interface ClientProfileProps {
   clientId: Id<"clients">;
@@ -62,6 +64,11 @@ export function ClientProfile({ clientId }: ClientProfileProps) {
           </div>
         </CardContent>
       </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <RiskAssessmentCard clientId={clientId} />
+        <ServiceRecommendations clientId={clientId} />
+      </div>
 
       <Tabs defaultValue="demographics">
         <TabsList>
