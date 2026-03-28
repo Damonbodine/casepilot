@@ -1,0 +1,17 @@
+Run complete. **26/26 steps completed, 0 failed.**
+
+Here's a summary of what was delivered:
+
+**4 AI Features Added to CasePilot:**
+
+1. **Risk Assessment AI** — On the client detail page, a card analyzes intake data (demographics, housing, employment, health, support network) and generates a risk score 1-10 with a level badge and expandable reasoning with individual risk factors.
+
+2. **Case Note Summarizer** — On the case notes tab, a date range picker lets users select a period and generate a structured narrative summary with sections: Overview, Key Events, Service Delivery, Goals Progress, Concerns, and Recommendations.
+
+3. **Service Recommendation Engine** — On the client detail page, analyzes the client profile against all active services and suggests top 3-5 matches with match scores, priority levels, and reasoning.
+
+4. **Smart Case Assignment** — When creating a case, an "AI Suggest Worker" button analyzes the client needs, case type, and available workers' caseloads/specializations to recommend the best case worker, with an "Assign" button to apply the suggestion.
+
+**Files created:** `convex/aiHelpers.ts`, `src/components/ai/risk-assessment-card.tsx`, `case-notes-summarizer.tsx`, `service-recommendations.tsx`, `smart-case-assignment.tsx`
+
+**Files modified:** `convex/ai.ts` (reusable `callOpenRouter` helper + 4 actions), `client-profile.tsx`, `case-notes-list.tsx`, `case-form.tsx`
