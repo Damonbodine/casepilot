@@ -19,8 +19,13 @@ export default function CasesListPage() {
         <h1 className="text-2xl font-bold">Cases</h1>
       </div>
       <div className="space-y-2">
-        {cases.map((c: any) => (
-          <Link key={c._id} href={withPreservedDemoQuery(`/cases/${c._id}`, searchParams)} className="block p-4 border rounded-lg hover:bg-muted/50">
+        {cases.map((c: any, index: number) => (
+          <Link
+            key={c._id}
+            href={withPreservedDemoQuery(`/cases/${c._id}`, searchParams)}
+            className="block p-4 border rounded-lg hover:bg-muted/50"
+            data-demo={index === 0 ? "primary-case-link" : undefined}
+          >
             <div className="font-medium">{c.caseNumber}</div>
             <div className="text-sm text-muted-foreground">{c.status} - {c.priority}</div>
           </Link>

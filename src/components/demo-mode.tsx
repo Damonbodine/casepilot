@@ -21,6 +21,7 @@ type DemoStep = {
   whyItMatters: string;
   routePrefix: string;
   target?: string;
+  actionTarget?: string;
   actionLabel?: string;
 };
 
@@ -90,6 +91,7 @@ const CASEPILOT_SCENARIO: DemoScenario = {
         "This shows the app is usable for real client work, not just top-level reporting.",
       routePrefix: "/clients/",
       target: "[data-demo='client-profile']",
+      actionTarget: "[data-demo='primary-client-link']",
     },
     {
       id: "cases-list",
@@ -111,6 +113,7 @@ const CASEPILOT_SCENARIO: DemoScenario = {
         "This is the proof point that the system can support day-to-day case execution, not just intake and reporting.",
       routePrefix: "/cases/",
       target: "[data-demo='case-workspace']",
+      actionTarget: "[data-demo='primary-case-link']",
     },
   ],
 };
@@ -210,6 +213,14 @@ export function DemoMode() {
 
   function nextStep() {
     if (!onExpectedRoute) {
+      const actionElement = activeStep.actionTarget
+        ? document.querySelector<HTMLElement>(activeStep.actionTarget)
+        : null;
+      if (actionElement) {
+        actionElement.click();
+        return;
+      }
+
       const params = new URLSearchParams(searchParams.toString());
       params.set("demo", activeScenario.id);
       params.set("step", String(stepIndex + 1));
@@ -220,9 +231,12 @@ export function DemoMode() {
       return;
     }
 
-    if (!isLastStep) {
-      setStepIndex((prev) => prev + 1);
+    if (isLastStep) {
+      exitDemo();
+      return;
     }
+
+    setStepIndex((prev) => prev + 1);
   }
 
   function previousStep() {

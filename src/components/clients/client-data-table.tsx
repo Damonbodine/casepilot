@@ -104,10 +104,14 @@ export function ClientDataTable({ organizationId }: ClientDataTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filtered.map((client: any) => (
+            {filtered.map((client: any, index: number) => (
               <TableRow key={client._id}>
                 <TableCell>
-                  <Link href={withPreservedDemoQuery(`/clients/${client._id}`, searchParams)} className="font-medium text-primary hover:underline">
+                  <Link
+                    href={withPreservedDemoQuery(`/clients/${client._id}`, searchParams)}
+                    className="font-medium text-primary hover:underline"
+                    data-demo={index === 0 ? "primary-client-link" : undefined}
+                  >
                     {client.firstName} {client.lastName}
                   </Link>
                 </TableCell>
